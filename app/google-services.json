@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "160177332098",
+    "firebase_url": "https://appuberlone.firebaseio.com",
+    "project_id": "appuberlone",
+    "storage_bucket": "appuberlone.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:160177332098:android:7ab76efb440713e65c799b",
+        "android_client_info": {
+          "package_name": "com.appmovil.myappuberclone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "160177332098-s53jradiekv85cn7ols55p086spleabg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.appmovil.myappuberclone",
+            "certificate_hash": "d1e67990060cdc67e0ddb510df1c356a33cee1c1"
+          }
+        },
+        {
+          "client_id": "160177332098-mcrhbu0p0iie1ig0676fur5qrpgl3d8v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3y-IR_xp-tD436jG6C-jpCyGWhXTkhr8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "160177332098-mcrhbu0p0iie1ig0676fur5qrpgl3d8v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
