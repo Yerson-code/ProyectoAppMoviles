@@ -23,6 +23,7 @@ public class SeleccionarOpcionActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Seleccionar opcion");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         mButtonLogin = findViewById(R.id.btnlogin);
         mRegistrar = findViewById(R.id.btnregistrarse);
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
