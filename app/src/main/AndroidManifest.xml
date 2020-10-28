@@ -13,7 +13,8 @@
         android:theme="@style/AppTheme">
         <activity android:name=".LoginActivity"
             android:parentActivityName=".SeleccionarOpcionActivity"></activity>
-        <activity android:name=".RegistrarseActivity" />
+        <activity android:name=".RegistrarseActivity"
+            android:parentActivityName=".SeleccionarOpcionActivity"/>
         <activity android:name=".SeleccionarOpcionActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".MainActivity">

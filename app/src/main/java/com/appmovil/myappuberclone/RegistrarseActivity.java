@@ -28,12 +28,18 @@ public class RegistrarseActivity extends AppCompatActivity {
     //Instanciar vistas
     Button mRegistro;
 
-    TextInputEditText mtxtnombre, mtxtcorreo, mtxtcontraseña;
+    TextInputEditText mtxtnombre;
+    TextInputEditText mtxtcorreo;
+    TextInputEditText mtxtcontraseña;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrarse);
+
+        getSupportActionBar().setTitle("Seleccionar opcion");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mAuth = FirebaseAuth.getInstance();
         mDatabse = FirebaseDatabase.getInstance().getReference();
 
@@ -44,25 +50,22 @@ public class RegistrarseActivity extends AppCompatActivity {
         mRegistro = findViewById(R.id.btnregisstro);
         mtxtnombre = findViewById(R.id.txtnombre);
         mtxtcorreo = findViewById(R.id.txtinputcorreoelectr);
-        mtxtnombre = findViewById(R.id.txtinputcontraseña);
-
-
-
+        mtxtcontraseña= findViewById(R.id.txtinputcontraseña);
 
         mRegistro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 resgistrousuario();
+                resgistrousuario();
             }
         });
     }
 
      void resgistrousuario() {
         final String nombre = mtxtnombre.getText().toString();
-        final String correo = mtxtcorreo.getText().toString();
-        String contraseña = mtxtcontraseña.getText().toString();
+         final String correo = mtxtcorreo.getText().toString();
+       final  String contraseña = mtxtcontraseña.getText().toString();
 
-        if (!nombre.isEmpty() && !correo.isEmpty() && !contraseña.isEmpty()){
+       if (!nombre.isEmpty() && !correo.isEmpty() && !contraseña.isEmpty()){
             if (contraseña.length() >=6){
 
                 mAuth.createUserWithEmailAndPassword(correo, contraseña).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -73,7 +76,7 @@ public class RegistrarseActivity extends AppCompatActivity {
                             guardarusario(nombre, correo);
                         }
                         else  {
-                            Toast.makeText(RegistrarseActivity.this, "No pudo registrarse el usuario", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegistrarseActivity.this, "No pudo registrarse el usuario ", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -95,11 +98,11 @@ public class RegistrarseActivity extends AppCompatActivity {
         usuario.setCorreo(correo);
         if (seleccionar.equals("driver")){
 
-            mDatabse.child("user").child("drivers").push().setValue(usuario).addOnCompleteListener(new OnCompleteListener<Void>() {
+            mDatabse.child("usuario").child("drivers").push().setValue(usuario).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()){
-                        Toast.makeText(RegistrarseActivity.this, "Registro Exitoso", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegistrarseActivity.this, "Registro  Exitoso", Toast.LENGTH_SHORT).show();
                     }
                     else{
                         Toast.makeText(RegistrarseActivity.this, "Fallo el registro", Toast.LENGTH_SHORT).show();
