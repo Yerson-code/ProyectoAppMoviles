@@ -56,7 +56,7 @@ public class SeleccionarOpcionActivity extends AppCompatActivity {
     }
     public void resgistrar() {
         String  seleccionarusua = mPref.getString("user","");
-        if (seleccionarusua.equals("driver"))
+        if (seleccionarusua.equals("client"))
         {
             Intent intent = new Intent(SeleccionarOpcionActivity.this, RegistrarseActivity.class);
             startActivity(intent);
