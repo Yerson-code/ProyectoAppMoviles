@@ -1,29 +1,32 @@
-package com.appmovil.myappuberclone;
+package com.appmovil.myappuberclone.activities.cliente;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.appmovil.myappuberclone.R;
+import com.appmovil.myappuberclone.datos.AuthProvider;
+import com.appmovil.myappuberclone.datos.ClienteProvider;
+import com.appmovil.myappuberclone.modelos.Cliente;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-import modelos.Usuario;
+import dmax.dialog.SpotsDialog;
 
 public class RegistrarseActivity extends AppCompatActivity {
 
-    SharedPreferences mPref;
-    FirebaseAuth mAuth;
-    DatabaseReference mDatabse;
+    AuthProvider mAuthProvider;
+    ClienteProvider mClienteProvider;
+
 
     //Instanciar vistas
     Button mRegistro;
@@ -31,23 +34,25 @@ public class RegistrarseActivity extends AppCompatActivity {
     TextInputEditText mtxtnombre;
     TextInputEditText mtxtcorreo;
     TextInputEditText mtxtcontraseña;
+    AlertDialog mdialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrarse);
 
-        getSupportActionBar().setTitle("Seleccionar opcion");
+        getSupportActionBar().setTitle("Registrar Cliente");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mAuth = FirebaseAuth.getInstance();
-        mDatabse = FirebaseDatabase.getInstance().getReference();
+        //INSTANCIAS DE LOS DATOS
+        mAuthProvider=new AuthProvider();
+        mClienteProvider=new ClienteProvider();
 
-        mPref = getApplicationContext().getSharedPreferences("typeUser", MODE_PRIVATE);
-        String  seleccionarusua = mPref.getString("user","");
-        Toast.makeText(this, "El valor que se selecciono fue " + seleccionarusua, Toast.LENGTH_SHORT).show();
 
-        mRegistro = findViewById(R.id.btnregisstro);
+
+      //  Toast.makeText(this, "El valor que se selecciono fue " + seleccionarusua, Toast.LENGTH_SHORT).show();
+        mdialog =new SpotsDialog.Builder().setContext(this).setMessage("Espere un momento").build();
+        mRegistro = findViewById(R.id.btnregistro);
         mtxtnombre = findViewById(R.id.txtnombre);
         mtxtcorreo = findViewById(R.id.txtinputcorreoelectr);
         mtxtcontraseña= findViewById(R.id.txtinputcontraseña);
@@ -55,31 +60,20 @@ public class RegistrarseActivity extends AppCompatActivity {
         mRegistro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                resgistrousuario();
+                clickRegistrarUsuario();
             }
         });
     }
 
-     void resgistrousuario() {
+     void clickRegistrarUsuario() {
         final String nombre = mtxtnombre.getText().toString();
          final String correo = mtxtcorreo.getText().toString();
        final  String contraseña = mtxtcontraseña.getText().toString();
 
        if (!nombre.isEmpty() && !correo.isEmpty() && !contraseña.isEmpty()){
             if (contraseña.length() >=6){
-
-                mAuth.createUserWithEmailAndPassword(correo, contraseña).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-
-                            guardarusario(nombre, correo);
-                        }
-                        else  {
-                            Toast.makeText(RegistrarseActivity.this, "No pudo registrarse el usuario ", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                mdialog.show();
+             registrarUsuario(nombre,correo,contraseña);
             }
             else {
                 Toast.makeText(this, "La contraseña debe tener almenos 6 caracteres", Toast.LENGTH_SHORT).show();
@@ -91,14 +85,45 @@ public class RegistrarseActivity extends AppCompatActivity {
 
     }
 
-    private void guardarusario(String nombre, String correo) {
+    private void registrarUsuario(final String nombre,final String email, final String password) {
+       //REGISTRA LA AUTENTICACION DE USUARIOS
+        mAuthProvider.RegistrarAutenticacion(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                mdialog.hide();
+                if (task.isSuccessful()){
+                    String id=FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    Cliente client=new Cliente(id,nombre,email);
+                   registrarCliente(client);
+                }
+                else  {
+                    Toast.makeText(RegistrarseActivity.this, "No pudo registrarse el usuario ", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    void registrarCliente(Cliente cliente){
+        mClienteProvider.crear(cliente).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    Toast.makeText(RegistrarseActivity.this, "Registrado exitosamente ", Toast.LENGTH_SHORT).show();
+                }else  {
+                    Toast.makeText(RegistrarseActivity.this, "No pudo registrarse el cliente ", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+    /*
+    private void guardarUsario(String id, String nombre, String correo) {
         String seleccionar = mPref.getString("user", "");
         Usuario usuario = new Usuario();
         usuario.setNombre(nombre);
         usuario.setCorreo(correo);
         if (seleccionar.equals("driver")){
 
-            mDatabse.child("usuario").child("drivers").push().setValue(usuario).addOnCompleteListener(new OnCompleteListener<Void>() {
+            mDatabse.child("Usuarios").child("Conductores").child(id).setValue(usuario).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()){
@@ -113,7 +138,7 @@ public class RegistrarseActivity extends AppCompatActivity {
 
         }
         else if (seleccionar.equals("client")){
-            mDatabse.child("user").child("clients").push().setValue(usuario).addOnCompleteListener(new OnCompleteListener<Void>() {
+            mDatabse.child("Usuarios").child("Clientes").child(id).setValue(usuario).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()){
@@ -126,5 +151,7 @@ public class RegistrarseActivity extends AppCompatActivity {
 
             });
         }
-    }
+        }
+     */
+
 }

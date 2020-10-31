@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".RegistrarseActivity">
+    tools:context=".activities.cliente.RegistrarseActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +28,8 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp">
+                    android:layout_marginLeft="5dp"
+                    app:endIconMode="clear_text">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtnombre"
                         android:layout_width="match_parent"
@@ -58,7 +59,8 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp">
+            android:layout_marginLeft="5dp"
+            app:endIconMode="clear_text">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txtinputcorreoelectr"
@@ -81,20 +83,23 @@
         android:layout_margin="10dp">
 
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_marginTop="10dp"
             android:src="@drawable/icons8_password_96px"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp">
+            android:layout_marginLeft="5dp"
+            app:endIconMode="password_toggle"
+            app:helperText="La contraseña al menos 6 cararcteres">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/txtinputcontraseña"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Ingrese Contraseña"
+
                 android:inputType="textPassword">
 
             </com.google.android.material.textfield.TextInputEditText>
@@ -112,7 +117,7 @@
             android:gravity="bottom">
 
             <Button
-                android:id="@+id/btnregisstro"
+                android:id="@+id/btnregistro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Resgistrar"

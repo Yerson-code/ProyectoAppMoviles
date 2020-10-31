@@ -1,4 +1,4 @@
-package com.appmovil.myappuberclone;
+package com.appmovil.myappuberclone.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.appmovil.myappuberclone.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -39,12 +40,13 @@ public class LoginActivity extends AppCompatActivity {
 
         mTxtcorreo = findViewById(R.id.txtinputcorreo);
         mTxtpasword = findViewById(R.id.txtinputpassword);
+
         mPLogin = findViewById(R.id.btnPrinLogin);
 
         mAuth = FirebaseAuth.getInstance();
         mDtabase = FirebaseDatabase.getInstance().getReference();
 
-        mdialog =new SpotsDialog.Builder().setContext(LoginActivity.this).setMessage("Espere un momemnto").build();
+        mdialog =new SpotsDialog.Builder().setContext(LoginActivity.this).setMessage("Espere un momento").build();
 
         getSupportActionBar().setTitle("Login");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -52,27 +54,28 @@ public class LoginActivity extends AppCompatActivity {
         mPLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PrincipalLogim();
+                PrincipalLogin();
             }
         });
     }
 
-    private void PrincipalLogim() {
+    private void PrincipalLogin() {
         String email = mTxtcorreo.getText().toString();
         String password = mTxtpasword.getText().toString();
 
         if (!email.isEmpty() && !password.isEmpty()){
             if (password.length() >=6){
                 mdialog.show();
+                //METODO DE FIREBASE PARA ENVIAR EL USUARIO Y LA CLAVE A LA BASE DE DATOS
                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
-                            Toast.makeText(LoginActivity.this, "Datos Ingresados correctamente", Toast.LENGTH_SHORT ).show();
+                            Toast.makeText(LoginActivity.this, "Su autenticacion se realizo con exito", Toast.LENGTH_SHORT ).show();
 
                         }
                         else {
-                            Toast.makeText(LoginActivity.this, "La contraseña o el password son incorrectos", Toast.LENGTH_SHORT ).show();
+                            Toast.makeText(LoginActivity.this, "El email y/o el password son incorrectos", Toast.LENGTH_SHORT ).show();
 
                         }
                         mdialog.dismiss();

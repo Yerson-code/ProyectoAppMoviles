@@ -1,4 +1,4 @@
-package com.appmovil.myappuberclone;
+package com.appmovil.myappuberclone.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.appmovil.myappuberclone.R;
+
 import static android.content.SharedPreferences.*;
 
 public class MainActivity extends AppCompatActivity {
@@ -15,12 +17,12 @@ public class MainActivity extends AppCompatActivity {
     Button mButtuonconductor;
     Button getmButtuoncliente;
 
-
     SharedPreferences mPref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().setTitle("Pedido de Taxi");
 
         mPref = getApplicationContext().getSharedPreferences("typeUser", MODE_PRIVATE);
         final Editor editor= mPref.edit();
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 goToselectAuth();
-                editor.putString("user","Client");
+                editor.putString("user","client");
                 editor.apply();
 
             }

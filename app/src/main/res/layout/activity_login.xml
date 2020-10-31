@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".LoginActivity">
+    tools:context=".activities.LoginActivity">
 
 
     <LinearLayout
@@ -30,14 +30,15 @@
 
             <ImageView
                 android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_height="30dp"
                 android:layout_marginTop="10dp"
-                android:src="@drawable/email_96px"/>
+                android:src="@drawable/email_96px" />
 
             <com.google.android.material.textfield.TextInputLayout
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:endIconMode="clear_text"
                 android:layout_marginLeft="5dp">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -70,7 +71,10 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:endIconMode="password_toggle"
+                app:helperText="La contraseña al menos 6 caracteres"
                 android:layout_marginLeft="5dp">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/txtinputpassword"
                     android:layout_width="match_parent"
@@ -96,7 +100,7 @@
                 android:id="@+id/btnPrinLogin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Resgistrar"
+                android:text="Ingresar"
                 android:layout_margin="30dp"
                 android:background="@drawable/round_button"
                 android:backgroundTint="@color/colorPrimary"

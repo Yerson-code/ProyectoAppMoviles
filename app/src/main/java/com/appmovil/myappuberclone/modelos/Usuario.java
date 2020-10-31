@@ -1,4 +1,4 @@
-package modelos;
+package com.appmovil.myappuberclone.modelos;
 
 public class Usuario {
     String id;
