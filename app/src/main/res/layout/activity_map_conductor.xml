@@ -6,10 +6,9 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context=".activities.conductor.MapConductorActivity">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="30dp"
-        android:text="MAPA CONDUCTOR"/>
+    <fragment
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.google.android.gms.maps.SupportMapFragment"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
