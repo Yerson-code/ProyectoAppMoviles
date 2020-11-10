@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -118,7 +119,10 @@ public class RegistrarConductorActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
-                    Toast.makeText(RegistrarConductorActivity.this, "Registrado exitosamente ", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(RegistrarConductorActivity.this, "Registrado exitosamente ", Toast.LENGTH_SHORT).show();
+                    Intent intent=new Intent(getApplicationContext(),MapConductorActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 }else  {
                     Toast.makeText(RegistrarConductorActivity.this, "No pudo registrarse el cliente ", Toast.LENGTH_SHORT).show();
                 }

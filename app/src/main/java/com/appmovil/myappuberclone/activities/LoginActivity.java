@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +13,8 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.appmovil.myappuberclone.R;
+import com.appmovil.myappuberclone.activities.cliente.MapClienteActivity;
+import com.appmovil.myappuberclone.activities.conductor.MapConductorActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -31,8 +35,8 @@ public class LoginActivity extends AppCompatActivity {
     DatabaseReference mDtabase;
 
     AlertDialog  mdialog;
+    SharedPreferences mPref;
 
-    Toolbar mToobar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         mTxtpasword = findViewById(R.id.txtinputpassword);
 
         mPLogin = findViewById(R.id.btnPrinLogin);
-
+        mPref = getApplicationContext().getSharedPreferences("typeUser", MODE_PRIVATE);
         mAuth = FirebaseAuth.getInstance();
         mDtabase = FirebaseDatabase.getInstance().getReference();
 
@@ -71,7 +75,17 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
-                            Toast.makeText(LoginActivity.this, "Su autenticacion se realizo con exito", Toast.LENGTH_SHORT ).show();
+                            //Toast.makeText(LoginActivity.this, "Su autenticacion se realizo con exito", Toast.LENGTH_SHORT ).show();
+                                String seleccionUsuario=mPref.getString("user","");
+                                if(seleccionUsuario.equals("client")){
+                                    Intent intent=new Intent(getApplicationContext(), MapClienteActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                }else{
+                                    Intent intent=new Intent(getApplicationContext(), MapConductorActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                }
 
                         }
                         else {

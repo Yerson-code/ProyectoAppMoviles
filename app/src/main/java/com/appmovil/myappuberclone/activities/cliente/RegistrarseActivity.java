@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.appmovil.myappuberclone.R;
+import com.appmovil.myappuberclone.activities.conductor.MapConductorActivity;
 import com.appmovil.myappuberclone.datos.AuthProvider;
 import com.appmovil.myappuberclone.datos.ClienteProvider;
 import com.appmovil.myappuberclone.modelos.Cliente;
@@ -108,7 +110,10 @@ public class RegistrarseActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
-                    Toast.makeText(RegistrarseActivity.this, "Registrado exitosamente ", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(RegistrarseActivity.this, "Registrado exitosamente ", Toast.LENGTH_SHORT).show();
+                    Intent intent=new Intent(getApplicationContext(), MapClienteActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 }else  {
                     Toast.makeText(RegistrarseActivity.this, "No pudo registrarse el cliente ", Toast.LENGTH_SHORT).show();
                 }

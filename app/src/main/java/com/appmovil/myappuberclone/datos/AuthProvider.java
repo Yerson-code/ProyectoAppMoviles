@@ -18,4 +18,8 @@ public class AuthProvider {
     public Task<AuthResult> Login(String email, String password){
         return mAuth.signInWithEmailAndPassword(email, password);
     }
+    //METODO PARA CERRAR SESION EN FIREBASE
+    public void cerrarSesion(){
+        mAuth.signOut();
+    }
 }

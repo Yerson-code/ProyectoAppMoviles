@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.appmovil.myappuberclone.R;
+import com.appmovil.myappuberclone.activities.cliente.MapClienteActivity;
+import com.appmovil.myappuberclone.activities.conductor.MapConductorActivity;
+import com.google.firebase.auth.FirebaseAuth;
 
 import static android.content.SharedPreferences.*;
 
@@ -53,5 +56,23 @@ public class MainActivity extends AppCompatActivity {
     private void goToselectAuth() {
         Intent intent = new Intent(MainActivity.this, SeleccionarOpcionActivity.class);
         startActivity(intent);
+    }
+    //METODO DEL CICLO DE VIDA DE UN ACTITITY
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(FirebaseAuth.getInstance().getCurrentUser()!=null){
+            String seleccionUsuario=mPref.getString("user","");
+            if(seleccionUsuario.equals("client")){
+                Intent intent=new Intent(getApplicationContext(), MapClienteActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }else{
+                Intent intent=new Intent(getApplicationContext(), MapConductorActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        }
     }
 }
