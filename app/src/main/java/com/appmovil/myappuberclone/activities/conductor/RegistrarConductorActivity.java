@@ -32,7 +32,6 @@ public class RegistrarConductorActivity extends AppCompatActivity {
     AuthProvider mAuthProvider;
     ConductorProvider mConductorProvider;
 
-
     //Instanciar vistas
     Button mRegistro;
 
