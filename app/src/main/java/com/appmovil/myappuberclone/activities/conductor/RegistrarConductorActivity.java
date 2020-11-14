@@ -95,7 +95,7 @@ public class RegistrarConductorActivity extends AppCompatActivity {
 
     }
 
-    private void registrarUsuario(final String nombre,final String email, final String password,final String marca,final String placa) {
+    private void registrarUsuario(final String nombre,final String email,final String marca,final String placa, final String password) {
         //REGISTRA LA AUTENTICACION DE USUARIOS
         mAuthProvider.RegistrarAutenticacion(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override

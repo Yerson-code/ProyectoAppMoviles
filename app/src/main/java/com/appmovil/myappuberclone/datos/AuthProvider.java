@@ -3,6 +3,7 @@ package com.appmovil.myappuberclone.datos;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 //CLASE ENCARGADA DE LA AUTENTICACION DE USUARIOS
 public class AuthProvider {
@@ -21,5 +22,15 @@ public class AuthProvider {
     //METODO PARA CERRAR SESION EN FIREBASE
     public void cerrarSesion(){
         mAuth.signOut();
+    }
+    public String obtenerIdConductor(){
+        return mAuth.getInstance().getCurrentUser().getUid();
+    }
+    public boolean existSesion(){
+        boolean existe=false;
+        if(mAuth.getCurrentUser()!=null){
+           existe=true;
+        }
+        return existe;
     }
 }

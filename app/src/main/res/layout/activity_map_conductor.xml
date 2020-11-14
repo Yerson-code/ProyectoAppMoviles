@@ -7,11 +7,24 @@
     android:fitsSystemWindows="true"
     tools:context=".activities.conductor.MapConductorActivity">
 
-
-
     <fragment
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="com.google.android.gms.maps.SupportMapFragment"/>
+
+    <Button
+        android:id="@+id/btnConectarse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_button"
+        android:layout_marginLeft="40sp"
+        android:layout_marginRight="40sp"
+        android:layout_marginBottom="30sp"
+        android:layout_gravity="bottom"
+        android:backgroundTint="@color/colorPrimary"
+        android:text="CONECTARSE"
+        android:textColor="@color/colorWhite" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+

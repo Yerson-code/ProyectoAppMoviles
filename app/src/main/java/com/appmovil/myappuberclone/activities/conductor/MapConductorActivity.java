@@ -29,8 +29,13 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.appmovil.myappuberclone.R;
+import com.appmovil.myappuberclone.datos.GeoFireProvider;
+import com.firebase.geofire.GeoFire;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -54,48 +59,88 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
     private GoogleMap mMap;
     private SupportMapFragment mMapFragment;
     private AuthProvider authProvider;
-
-
     private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocation;
-
     private final static int LOCATION_REQUEST_CODE = 1;
     private final static int SETTINGS_REQUEST_CODE = 2;
-
+    private Button btnConectar;
     private Marker mMarker;
+    private boolean isConect=false;
+    private LatLng latLng;
+    private GeoFireProvider mGeofireProvider;
     private LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             for (Location location : locationResult.getLocations()) {
                 if (getApplicationContext() != null) {
+
+                    latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    if (mMarker != null) {
+                        mMarker.remove();
+                    }
                     mMarker = mMap.addMarker(new MarkerOptions().position(
                             new LatLng(location.getLatitude(), location.getLongitude())
                             )
-                                    .title("tu posicion")
+                                    .title("Tu posicion")
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_cars))
                     );
+
+                    //LOCALIZACION DEL USUARIO EN TIEMPO REAL
+                    mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
+                            new CameraPosition.Builder()
+                                    .target(new LatLng(location.getLatitude(), location.getLongitude()))
+                                    .zoom(16f)
+                                    .build()
+                    ));
                 }
-                //LOCALIZACION DEL USUARIO EN TIEMPO REAL
-                mMap.moveCamera(CameraUpdateFactory.newCameraPosition(
-                        new CameraPosition.Builder()
-                                .target(new LatLng(location.getLatitude(), location.getLongitude()))
-                                .zoom(15f)
-                                .build()
-                ));
+                actualizarLOcalizacion();
             }
         }
     };
+    //METODO QUE ACTUALIZA LA POSICION ACTUAL DEL CONDUCTOR EN LA BASE DE DATOS
+    private void actualizarLOcalizacion() {
+        if(authProvider.existSesion()&& latLng!=null){
+            mGeofireProvider.guardarLocalizacion(authProvider.obtenerIdConductor(),latLng);
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_conductor);
-        getSupportActionBar().setTitle("Mapa Conductor");
+        getSupportActionBar().setTitle("Conductor");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
-
         authProvider = new AuthProvider();
+        btnConectar=(Button)findViewById(R.id.btnConectarse);
+        mGeofireProvider=new GeoFireProvider();
+        btnConectar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isConect){
+                        Disconect();
+                }else{
+                    starLocation();
+                }
+            }
+        });
+    }
+
+    private void Disconect() {
+        if(mFusedLocation!=null){
+            btnConectar.setText("CONECTARSE");
+            isConect=false;
+            mFusedLocation.removeLocationUpdates(mLocationCallback);
+            if(authProvider.existSesion()){
+                mGeofireProvider.eliminarLocalizacion(authProvider.obtenerIdConductor());
+            }
+
+        }
+        else{
+            Toast.makeText(this, "No se puede desconectar", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -104,16 +149,12 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mLocationRequest = new LocationRequest();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        mMap.setMyLocationEnabled(false);
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setSmallestDisplacement(5);
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
-        starLocation();
+
 
     }
 
@@ -125,6 +166,10 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     if(gpsActive()){
                         mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+                        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+                        mMap.setMyLocationEnabled(true);
                     }else{
                         showAlertNoGPS();
                     }
@@ -145,6 +190,10 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
                 return;
             }
             mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            mMap.setMyLocationEnabled(true);
         }else{
             showAlertNoGPS();
         }
@@ -171,16 +220,26 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
         }
         return isACtive;
     }
-
+    //METODO PARA INICIAR LA LOCALIZACION
     private void  starLocation(){
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
             if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED){
                 if(gpsActive()){
+                    btnConectar.setText("DESCONECTARSE");
+                    isConect=true;
                     mFusedLocation.requestLocationUpdates(mLocationRequest,mLocationCallback, Looper.myLooper());
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        return;
+                    }
+                    mMap.setMyLocationEnabled(true);
                 }else{
                     showAlertNoGPS();
                 }
                 mFusedLocation.requestLocationUpdates(mLocationRequest,mLocationCallback, Looper.myLooper());
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                mMap.setMyLocationEnabled(true);
             }else{
                 checkLocationPermission();
             }
@@ -192,6 +251,7 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
             }
             }
     }
+    //MRTODO PARA VERIFICAR SI EL USUARIO ACEPTO LOS PERMISOS
     private void checkLocationPermission(){
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
           if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.ACCESS_FINE_LOCATION)){
@@ -228,6 +288,7 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
         return super.onOptionsItemSelected(item);
     }
     void logout(){
+        Disconect();
         authProvider.cerrarSesion();
         Intent intent=new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
