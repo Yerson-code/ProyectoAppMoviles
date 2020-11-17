@@ -168,6 +168,9 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             intent.putExtra("origen_lng",mOriginLatLng.longitude);
             intent.putExtra("destino_lat",mDestinationLatLng.latitude);
             intent.putExtra("destino_lng",mDestinationLatLng.longitude);
+            intent.putExtra("origen",mOrigin);
+            intent.putExtra("destino",mDestination);
+
             startActivity(intent);
         }else{
             Toast.makeText(this, "Seleccione origen y destino", Toast.LENGTH_SHORT).show();
