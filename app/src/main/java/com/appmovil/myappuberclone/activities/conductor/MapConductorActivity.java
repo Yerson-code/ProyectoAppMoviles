@@ -115,7 +115,7 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
         mMapFragment.getMapAsync(this);
         authProvider = new AuthProvider();
         btnConectar=(Button)findViewById(R.id.btnConectarse);
-        mGeofireProvider=new GeoFireProvider();
+        mGeofireProvider=new GeoFireProvider("Conductores_Activos");
         btnConectar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -268,7 +268,7 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
               .show();
           }else{
               ActivityCompat.requestPermissions(MapConductorActivity.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST_CODE);
-
+              btnConectar.setText("DESCONECTARSE");
           }
             }
     }

@@ -138,7 +138,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         getSupportActionBar().setTitle("Cliente");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mAuthProvider = new AuthProvider();
-        mGeofireProvider = new GeoFireProvider();
+        mGeofireProvider = new GeoFireProvider("Conductores_Activos");
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         btnSolicitarConductor=(Button)findViewById(R.id.btnSolicitarConductor);
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -312,7 +312,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void obtenerConductoresActivos(){
-        mGeofireProvider.obtenerConductoresActivos(latLng).addGeoQueryEventListener(new GeoQueryEventListener() {
+        mGeofireProvider.obtenerConductoresActivos(latLng,10).addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 //AÑADIR LOS MARCADORES DE LOS CONDUCTORES QUE SE CONECTA A LA APLICACION

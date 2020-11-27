@@ -50,6 +50,9 @@ public class DetalleSolicitudActivity extends AppCompatActivity implements OnMap
     private LatLng origingLatLng;
     private LatLng destinationLatLng;
 
+    private String mExtraOrigin;
+    private String mExtraDestination;
+
     private GoogleApiProvider googleApiProvider;
 
     private List<LatLng> mPolyLineList;
@@ -99,14 +102,14 @@ public class DetalleSolicitudActivity extends AppCompatActivity implements OnMap
 
     private void irSolicitarConductor() {
         Intent intent = new Intent(DetalleSolicitudActivity.this, SolicitarConductorActivity.class);
-        /*
-        intent.putExtra("origin_lat", mOriginLatLng.latitude);
-        intent.putExtra("origin_lng", mOriginLatLng.longitude);
+
+        intent.putExtra("origin_lat", origingLatLng.latitude);
+        intent.putExtra("origin_lng", origingLatLng.longitude);
         intent.putExtra("origin", mExtraOrigin);
         intent.putExtra("destination", mExtraDestination);
-        intent.putExtra("destination_lat", mDestinationLatLng.latitude);
-        intent.putExtra("destination_lng", mDestinationLatLng.longitude);
-*/
+        intent.putExtra("destination_lat", destinationLatLng.latitude);
+        intent.putExtra("destination_lng", destinationLatLng.longitude);
+
         startActivity(intent);
         finish();
     }

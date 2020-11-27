@@ -11,8 +11,8 @@ public class GeoFireProvider {
     private DatabaseReference mDatabase;
     private GeoFire mGeofire;
 
-    public GeoFireProvider(){
-        mDatabase= FirebaseDatabase.getInstance().getReference().child("Conductores_Activos");
+    public GeoFireProvider(String reference){
+        mDatabase= FirebaseDatabase.getInstance().getReference().child(reference);
         mGeofire=new GeoFire(mDatabase);
     }
 
@@ -22,7 +22,8 @@ public class GeoFireProvider {
     public void eliminarLocalizacion(String idConductor){
         mGeofire.removeLocation(idConductor);
     }
-    public GeoQuery obtenerConductoresActivos(LatLng latLng){
+
+    public GeoQuery obtenerConductoresActivos(LatLng latLng,double radius){
         GeoQuery geoQuery=mGeofire.queryAtLocation(new GeoLocation(latLng.latitude,latLng.longitude),5);
         geoQuery.removeAllListeners();
         return  geoQuery;
