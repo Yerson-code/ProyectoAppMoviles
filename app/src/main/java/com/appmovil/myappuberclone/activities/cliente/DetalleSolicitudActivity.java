@@ -2,9 +2,12 @@ package com.appmovil.myappuberclone.activities.cliente;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.appmovil.myappuberclone.R;
@@ -56,7 +59,7 @@ public class DetalleSolicitudActivity extends AppCompatActivity implements OnMap
     TextView txtDestino;
     TextView txtTiempo;
     TextView txtDistancia;
-
+    Button btnSolicitarAhora;
     String origen;
     String destino;
 
@@ -74,7 +77,6 @@ public class DetalleSolicitudActivity extends AppCompatActivity implements OnMap
         extraDestinationLgn=getIntent().getDoubleExtra("destino_lng",0);
         origen=getIntent().getStringExtra("origen");
         destino=getIntent().getStringExtra("destino");
-
         origingLatLng=new LatLng(extraOriginLat,extraOriginLgn);
         destinationLatLng=new LatLng(extraDestinationLat,extraDestinationLgn);
         googleApiProvider=new GoogleApiProvider(DetalleSolicitudActivity.this);
@@ -82,10 +84,31 @@ public class DetalleSolicitudActivity extends AppCompatActivity implements OnMap
         txtDestino=(TextView)findViewById(R.id.txtViewDestino);
         txtTiempo=(TextView)findViewById(R.id.txtViewTime);
         txtDistancia=(TextView)findViewById(R.id.txtViewDistancia);
+        btnSolicitarAhora=(Button)findViewById(R.id.btnSolicitarAhora);
         txtorigen.setText(origen);
         txtDestino.setText(destino);
+        btnSolicitarAhora.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    irSolicitarConductor();
+            }
+        });
 
 
+    }
+
+    private void irSolicitarConductor() {
+        Intent intent = new Intent(DetalleSolicitudActivity.this, SolicitarConductorActivity.class);
+        /*
+        intent.putExtra("origin_lat", mOriginLatLng.latitude);
+        intent.putExtra("origin_lng", mOriginLatLng.longitude);
+        intent.putExtra("origin", mExtraOrigin);
+        intent.putExtra("destination", mExtraDestination);
+        intent.putExtra("destination_lat", mDestinationLatLng.latitude);
+        intent.putExtra("destination_lng", mDestinationLatLng.longitude);
+*/
+        startActivity(intent);
+        finish();
     }
 
     private void dibujarRuta(){

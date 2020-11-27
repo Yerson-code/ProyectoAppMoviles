@@ -12,11 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.cliente.DetalleSolicitudActivity"
-            android:parentActivityName=".activities.cliente.MapClienteActivity" ></activity>
-
+        <activity android:name=".activities.cliente.SolicitarConductorActivity"
+            android:parentActivityName=".activities.cliente.DetalleSolicitudActivity" ></activity>
+        <activity
+            android:name=".activities.cliente.DetalleSolicitudActivity"
+            android:parentActivityName=".activities.cliente.MapClienteActivity" />
         <activity android:name=".activities.conductor.MapConductorActivity" />
-
         <activity android:name=".activities.cliente.MapClienteActivity" />
         <activity
             android:name=".activities.conductor.RegistrarConductorActivity"

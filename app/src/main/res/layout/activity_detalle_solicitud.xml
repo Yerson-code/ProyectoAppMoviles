@@ -112,7 +112,7 @@
                 android:id="@+id/btnSolicitarAhora"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Solicitar Aahora"
+                android:text="Solicitar Ahora"
                 android:background="@color/colorPrimaryDark"
                 android:textColor="@color/colorWhite"/>
     </LinearLayout>
