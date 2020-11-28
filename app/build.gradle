@@ -46,6 +46,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.firebase:geofire-android:2.2.0'
+    implementation 'com.google.firebase:firebase-messaging:20.2.3'
 
     //DEPENDENCIAS DE RETROFIT
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'

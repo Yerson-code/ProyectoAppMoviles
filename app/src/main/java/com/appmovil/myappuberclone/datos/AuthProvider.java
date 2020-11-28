@@ -24,7 +24,7 @@ public class AuthProvider {
         mAuth.signOut();
     }
     public String obtenerIdConductor(){
-        return mAuth.getInstance().getCurrentUser().getUid();
+        return mAuth.getCurrentUser().getUid();
     }
     public boolean existSesion(){
         boolean existe=false;

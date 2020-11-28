@@ -32,6 +32,7 @@ import com.appmovil.myappuberclone.activities.MainActivity;
 import com.appmovil.myappuberclone.activities.conductor.MapConductorActivity;
 import com.appmovil.myappuberclone.datos.AuthProvider;
 import com.appmovil.myappuberclone.datos.GeoFireProvider;
+import com.appmovil.myappuberclone.datos.TokenProvider;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.common.api.Status;
@@ -77,7 +78,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     private Marker mMarker;
     private LatLng latLng;
     boolean mFirstTime = true;
-
+    private TokenProvider mTokenProvider;
     private AutocompleteSupportFragment mAutoComplete;
     private AutocompleteSupportFragment mAutoCompleteDestination;
     private PlacesClient mPlaces;
@@ -139,6 +140,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mAuthProvider = new AuthProvider();
         mGeofireProvider = new GeoFireProvider("Conductores_Activos");
+        mTokenProvider = new TokenProvider();
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         btnSolicitarConductor=(Button)findViewById(R.id.btnSolicitarConductor);
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -158,7 +160,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                 solicitarConductor();
             }
         });
-
+    generateToken();
     }
 
     private void solicitarConductor() {
@@ -458,6 +460,9 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         Intent intent=new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
         finish();
+    }
+    void generateToken() {
+        mTokenProvider.create(mAuthProvider.obtenerIdConductor());
     }
 
 }

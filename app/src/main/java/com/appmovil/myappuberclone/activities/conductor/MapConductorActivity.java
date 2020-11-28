@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import com.appmovil.myappuberclone.R;
 import com.appmovil.myappuberclone.datos.GeoFireProvider;
+import com.appmovil.myappuberclone.datos.TokenProvider;
 import com.firebase.geofire.GeoFire;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -68,6 +69,8 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
     private boolean isConect=false;
     private LatLng latLng;
     private GeoFireProvider mGeofireProvider;
+    private AuthProvider mAuthProvider;
+    private TokenProvider mTokenProvider;
     private LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -116,6 +119,8 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
         authProvider = new AuthProvider();
         btnConectar=(Button)findViewById(R.id.btnConectarse);
         mGeofireProvider=new GeoFireProvider("Conductores_Activos");
+        mTokenProvider = new TokenProvider();
+        mAuthProvider=new AuthProvider();
         btnConectar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,6 +131,7 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
                 }
             }
         });
+        generateToken();
     }
 
     private void Disconect() {
@@ -292,5 +298,8 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
         Intent intent=new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
         finish();
+    }
+    void generateToken() {
+       mTokenProvider.create(mAuthProvider.obtenerIdConductor());
     }
 }
