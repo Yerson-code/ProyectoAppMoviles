@@ -105,10 +105,12 @@ public class DetalleSolicitudActivity extends AppCompatActivity implements OnMap
 
         intent.putExtra("origin_lat", origingLatLng.latitude);
         intent.putExtra("origin_lng", origingLatLng.longitude);
-        intent.putExtra("origin", mExtraOrigin);
-        intent.putExtra("destination", mExtraDestination);
+        intent.putExtra("origin", origen);
+        intent.putExtra("destination", destino);
         intent.putExtra("destination_lat", destinationLatLng.latitude);
         intent.putExtra("destination_lng", destinationLatLng.longitude);
+
+
 
         startActivity(intent);
         finish();

@@ -11,17 +11,25 @@ import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.appmovil.myappuberclone.R;
+import com.appmovil.myappuberclone.datos.AuthProvider;
+import com.appmovil.myappuberclone.datos.ClientBookingProvider;
 import com.appmovil.myappuberclone.datos.GeoFireProvider;
+import com.appmovil.myappuberclone.datos.GoogleApiProvider;
 import com.appmovil.myappuberclone.datos.NotificationProvider;
 import com.appmovil.myappuberclone.datos.TokenProvider;
+import com.appmovil.myappuberclone.modelos.ClientBooking;
 import com.appmovil.myappuberclone.modelos.FCMBody;
 import com.appmovil.myappuberclone.modelos.FCMResponse;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,12 +53,14 @@ public class SolicitarConductorActivity extends AppCompatActivity {
     private LatLng mOriginLatLng;
     private LatLng mDestinationLatLng;
     private double mRadius = 0.1;
-
+    private AuthProvider mAuthProvider;
     private boolean mDriverFound = false;
     private String  mIdDriverFound = "";
     private LatLng mDriverFoundLatLng;
     private NotificationProvider mNotificationProvider;
     private TokenProvider mTokenProvider;
+    private ClientBookingProvider mClientBookingProvider;
+    private GoogleApiProvider mGoogleApiProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +81,12 @@ public class SolicitarConductorActivity extends AppCompatActivity {
         mExtraDestinationLng = getIntent().getDoubleExtra("destination_lng", 0);
         mOriginLatLng = new LatLng(mExtraOriginLat, mExtraOriginLng);
         mDestinationLatLng= new LatLng(mExtraDestinationLat, mExtraDestinationLng);
-
+        mClientBookingProvider=new ClientBookingProvider();
         mGeofireProvider = new GeoFireProvider("Conductores_Activos");
         mNotificationProvider=new NotificationProvider();
         mTokenProvider=new TokenProvider();
+        mAuthProvider=new AuthProvider();
+        mGoogleApiProvider = new GoogleApiProvider(SolicitarConductorActivity.this);
         getClosestDriver();
     }
     private void getClosestDriver() {
@@ -87,7 +99,7 @@ public class SolicitarConductorActivity extends AppCompatActivity {
                     mIdDriverFound = key;
                     mDriverFoundLatLng = new LatLng(location.latitude, location.longitude);
                     mTextViewLookingFor.setText("CONDUCTOR ENCONTRADO\nESPERANDO RESPUESTA...");
-                    senNotification();
+                        createClientBooking();
                     Log.d("DRIVER", "ID: " + mIdDriverFound);
                 }
 
@@ -127,29 +139,91 @@ public class SolicitarConductorActivity extends AppCompatActivity {
         });
     }
 
-    private void senNotification() {
+    private void createClientBooking() {
+
+        mGoogleApiProvider.getDirections(mOriginLatLng, mDriverFoundLatLng).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject(response.body());
+                    JSONArray jsonArray = jsonObject.getJSONArray("routes");
+                    JSONObject route = jsonArray.getJSONObject(0);
+                    JSONObject polylines = route.getJSONObject("overview_polyline");
+                    String points = polylines.getString("points");
+                    JSONArray legs =  route.getJSONArray("legs");
+                    JSONObject leg = legs.getJSONObject(0);
+                    JSONObject distance = leg.getJSONObject("distance");
+                    JSONObject duration = leg.getJSONObject("duration");
+                    String distanceText = distance.getString("text");
+                    String durationText = duration.getString("text");
+                    senNotification(durationText,distanceText);
+
+
+                } catch(Exception e) {
+                    Log.d("Error", "Error encontrado " + e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
+
+
+
+    }
+
+    private void senNotification(final String time, final String km) {
         mTokenProvider.getToken(mIdDriverFound).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     String token = snapshot.child("token").getValue().toString();
                     Map<String, String> map = new HashMap<>();
-                    map.put("title", "SOLICITUD DE SERVICIO");
+                    map.put("title", "SOLICITUD DE SERVICIO A "+time +" DE TU POSICION");
                     map.put("body",
-                            "tienes una solicitud de viaje"
+                            "Un cliente esta solicitando un servicio a una distancia de " + km + "\n" +
+                                    "Recoger en: " + mExtraOrigin + "\n" +
+                                    "Destino: " + mExtraDestination
                     );
+                    map.put("idClient", mAuthProvider.obtenerIdConductor());
                     FCMBody fcmBody = new FCMBody(token, "high", "4500s", map);
                     mNotificationProvider.sendNotification(fcmBody).enqueue(new Callback<FCMResponse>() {
                         @Override
                         public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
                             if (response.body() != null) {
                                 if (response.body().getSuccess() == 1) {
-                                    Toast.makeText(SolicitarConductorActivity.this, "La notificacion se ha enviado correctamente", Toast.LENGTH_SHORT).show();
+
+                                    ClientBooking clientBooking=new ClientBooking(
+                                            mAuthProvider.obtenerIdConductor(),
+                                            mIdDriverFound,
+                                            mExtraDestination,
+                                            mExtraOrigin,
+                                            time,
+                                            km,
+                                            "create",
+                                            mExtraOriginLat,
+                                            mExtraOriginLng,
+                                            mExtraDestinationLat,
+                                            mExtraDestinationLng
+
+                                    );
+                                    mClientBookingProvider.create(clientBooking).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(SolicitarConductorActivity.this, "La peticion se creo correctamente", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                  //  Toast.makeText(SolicitarConductorActivity.this, "La notificacion se ha enviado correctamente", Toast.LENGTH_SHORT).show();
 
                                 }else{
                                     Toast.makeText(SolicitarConductorActivity.this, "No se pudo enviar la anotificacion", Toast.LENGTH_SHORT).show();
                                 }
-                                }
+                                }else{
+                                Toast.makeText(SolicitarConductorActivity.this, "No se pudo enviar la anotificacion", Toast.LENGTH_SHORT).show();
+                            }
                         }
 
                         @Override
@@ -158,6 +232,8 @@ public class SolicitarConductorActivity extends AppCompatActivity {
 
                         }
                     });
+                }else {
+                    Toast.makeText(SolicitarConductorActivity.this, "No se pudo enviar la notificacion porque el conductor no tiene un token de sesion", Toast.LENGTH_SHORT).show();
                 }
             }
 
