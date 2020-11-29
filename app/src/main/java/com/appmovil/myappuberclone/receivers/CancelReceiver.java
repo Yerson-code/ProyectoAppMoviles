@@ -1,4 +1,4 @@
-package receivers;
+package com.appmovil.myappuberclone.receivers;
 
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
@@ -12,7 +12,7 @@ public class CancelReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        /*
+
         String idClient = intent.getExtras().getString("idClient");
         mClientBookingProvider = new ClientBookingProvider();
         mClientBookingProvider.updateStatus(idClient, "cancel");
@@ -20,6 +20,6 @@ public class CancelReceiver extends BroadcastReceiver {
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(2);
 
-         */
+
     }
 }

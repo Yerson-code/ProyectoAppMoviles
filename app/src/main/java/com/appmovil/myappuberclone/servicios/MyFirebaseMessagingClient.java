@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -20,8 +18,8 @@ import com.google.firebase.messaging.RemoteMessage;
 
 import java.util.Map;
 
-import receivers.AcceptReceiver;
-import receivers.CancelReceiver;
+import com.appmovil.myappuberclone.receivers.AcceptReceiver;
+import com.appmovil.myappuberclone.receivers.CancelReceiver;
 
 public class MyFirebaseMessagingClient extends FirebaseMessagingService {
     private static final int NOTIFICATION_CODE = 100;
@@ -76,7 +74,7 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
         PendingIntent acceptPendingIntent = PendingIntent.getBroadcast(this, NOTIFICATION_CODE, acceptIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Action acceptAction = new NotificationCompat.Action.Builder(
-                R.mipmap.ic_launcher,
+                R.drawable.chek,
                 "Aceptar",
                 acceptPendingIntent
         ).build();
@@ -88,7 +86,7 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
         PendingIntent cancelPendingIntent = PendingIntent.getBroadcast(this, NOTIFICATION_CODE, cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Action cancelAction = new NotificationCompat.Action.Builder(
-                R.mipmap.ic_launcher,
+                R.drawable.cancel,
                 "Cancelar",
                 cancelPendingIntent
         ).build();

@@ -12,6 +12,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <receiver android:name="com.appmovil.myappuberclone.receivers.AcceptReceiver"
+            android:enabled="true">
+        </receiver>
+        <receiver android:name="com.appmovil.myappuberclone.receivers.CancelReceiver"
+            android:enabled="true">
+        </receiver>
+
         <service android:name=".servicios.MyFirebaseMessagingClient">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
