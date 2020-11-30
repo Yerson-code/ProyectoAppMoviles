@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.appmovil.myappuberclone.activities.conductor.MapDriverBookingActivity;
 import com.appmovil.myappuberclone.datos.AuthProvider;
 import com.appmovil.myappuberclone.datos.ClientBookingProvider;
 import com.appmovil.myappuberclone.datos.GeoFireProvider;
@@ -21,7 +22,7 @@ public class AcceptReceiver extends BroadcastReceiver {
 
         mAuthProvider = new AuthProvider();
         mGeofireProvider = new GeoFireProvider("Conductores_Activos");
-        //mGeofireProvider.removeLocation(mAuthProvider.obtenerIdConductor());
+        mGeofireProvider.eliminarLocalizacion(mAuthProvider.obtenerIdConductor());
 
         String idClient = intent.getExtras().getString("idClient");
         mClientBookingProvider = new ClientBookingProvider();
@@ -29,14 +30,12 @@ public class AcceptReceiver extends BroadcastReceiver {
 
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(2);
-/*
+
         Intent intent1 = new Intent(context, MapDriverBookingActivity.class);
         intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent1.setAction(Intent.ACTION_RUN);
         intent1.putExtra("idClient", idClient);
         context.startActivity(intent1);
-
- */
 
 
 

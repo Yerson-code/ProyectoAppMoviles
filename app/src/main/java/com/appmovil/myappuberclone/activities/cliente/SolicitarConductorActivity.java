@@ -3,6 +3,7 @@ package com.appmovil.myappuberclone.activities.cliente;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -61,6 +62,7 @@ public class SolicitarConductorActivity extends AppCompatActivity {
     private TokenProvider mTokenProvider;
     private ClientBookingProvider mClientBookingProvider;
     private GoogleApiProvider mGoogleApiProvider;
+    private ValueEventListener mListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,7 +215,9 @@ public class SolicitarConductorActivity extends AppCompatActivity {
                                     mClientBookingProvider.create(clientBooking).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            Toast.makeText(SolicitarConductorActivity.this, "La peticion se creo correctamente", Toast.LENGTH_SHORT).show();
+
+                                            checkStatusClientBooking();
+
                                         }
                                     });
                                   //  Toast.makeText(SolicitarConductorActivity.this, "La notificacion se ha enviado correctamente", Toast.LENGTH_SHORT).show();
@@ -244,11 +248,39 @@ public class SolicitarConductorActivity extends AppCompatActivity {
         });
 
     }
+    private void checkStatusClientBooking() {
+        mListener = mClientBookingProvider.getStatus(mAuthProvider.obtenerIdConductor()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String status = dataSnapshot.getValue().toString();
+                    if (status.equals("accept")) {
+                        Intent intent = new Intent(SolicitarConductorActivity.this, MapClientBookingActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else if (status.equals("cancel")) {
+                        Toast.makeText(SolicitarConductorActivity.this, "El conductor no acepto el viaje", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(SolicitarConductorActivity.this, MapClienteActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
+    }
 
-
-
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mListener != null) {
+            mClientBookingProvider.getStatus(mAuthProvider.obtenerIdConductor()).removeEventListener(mListener);
+        }
+    }
 }

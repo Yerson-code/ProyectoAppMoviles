@@ -28,4 +28,7 @@ public class GeoFireProvider {
         geoQuery.removeAllListeners();
         return  geoQuery;
     }
+    public DatabaseReference isDriverWorking(String idDriver) {
+        return FirebaseDatabase.getInstance().getReference().child("Conductores_Trabajando").child(idDriver);
+    }
 }

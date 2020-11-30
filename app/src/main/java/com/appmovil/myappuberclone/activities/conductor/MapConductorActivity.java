@@ -53,6 +53,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.lang.annotation.Target;
 
@@ -71,6 +74,7 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
     private GeoFireProvider mGeofireProvider;
     private AuthProvider mAuthProvider;
     private TokenProvider mTokenProvider;
+    private ValueEventListener mListener;
     private LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -125,16 +129,39 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
             @Override
             public void onClick(View v) {
                 if(isConect){
-                        Disconect();
+                        Disconnect();
                 }else{
                     starLocation();
                 }
             }
         });
         generateToken();
+        isDriverWorking();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mListener != null) {
+           mGeofireProvider.isDriverWorking(mAuthProvider.obtenerIdConductor()).removeEventListener(mListener);
+        }
+    }
+    private void isDriverWorking() {
+        mListener = mGeofireProvider.isDriverWorking(mAuthProvider.obtenerIdConductor()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Disconnect();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
-    private void Disconect() {
+    private void Disconnect() {
         if(mFusedLocation!=null){
             btnConectar.setText("CONECTARSE");
             isConect=false;
@@ -293,7 +320,7 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
         return super.onOptionsItemSelected(item);
     }
     void logout(){
-        Disconect();
+        Disconnect();
         authProvider.cerrarSesion();
         Intent intent=new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);

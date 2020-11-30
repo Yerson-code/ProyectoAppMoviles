@@ -12,21 +12,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.conductor.MapDriverBookingActivity"></activity>
+        <activity android:name=".activities.cliente.MapClientBookingActivity" />
 
-        <receiver android:name="com.appmovil.myappuberclone.receivers.AcceptReceiver"
-            android:enabled="true">
-        </receiver>
-        <receiver android:name="com.appmovil.myappuberclone.receivers.CancelReceiver"
-            android:enabled="true">
-        </receiver>
+        <receiver
+            android:name=".receivers.AcceptReceiver"
+            android:enabled="true" />
+        <receiver
+            android:name=".receivers.CancelReceiver"
+            android:enabled="true" />
 
         <service android:name=".servicios.MyFirebaseMessagingClient">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <activity android:name=".activities.cliente.SolicitarConductorActivity"
-            android:parentActivityName=".activities.cliente.DetalleSolicitudActivity" ></activity>
+
+        <activity
+            android:name=".activities.cliente.SolicitarConductorActivity"
+            android:parentActivityName=".activities.cliente.DetalleSolicitudActivity" />
         <activity
             android:name=".activities.cliente.DetalleSolicitudActivity"
             android:parentActivityName=".activities.cliente.MapClienteActivity" />
