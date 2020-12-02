@@ -15,5 +15,7 @@ public class ConductorProvider {
         public Task<Void> crear(Conductor conductor){
             return  mDatabse.child(conductor.getId()).setValue(conductor);
         }
-
+    public DatabaseReference getDriver(String idDriver) {
+        return mDatabse.child(idDriver);
+    }
 }

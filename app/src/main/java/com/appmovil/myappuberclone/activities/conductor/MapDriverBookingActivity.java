@@ -6,12 +6,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +27,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.appmovil.myappuberclone.R;
+import com.appmovil.myappuberclone.Utils.DecodePoints;
 import com.appmovil.myappuberclone.datos.AuthProvider;
 import com.appmovil.myappuberclone.datos.ClientBookingProvider;
 import com.appmovil.myappuberclone.datos.ClienteProvider;
@@ -31,6 +35,8 @@ import com.appmovil.myappuberclone.datos.GeoFireProvider;
 import com.appmovil.myappuberclone.datos.GoogleApiProvider;
 import com.appmovil.myappuberclone.datos.NotificationProvider;
 import com.appmovil.myappuberclone.datos.TokenProvider;
+import com.appmovil.myappuberclone.modelos.FCMBody;
+import com.appmovil.myappuberclone.modelos.FCMResponse;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -42,12 +48,26 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.SquareCap;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MapDriverBookingActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
@@ -72,6 +92,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
     private TextView mTextViewEmailClientBooking;
     private TextView mTextViewOriginClientBooking;
     private TextView mTextViewDestinationClientBooking;
+    private TextView mTextViewStatusBooking;
 
     private String mExtraClientId;
 
@@ -84,7 +105,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
 
     private boolean mIsFirstTime = true;
     private boolean mIsCloseToClient = false;
-
+    private ValueEventListener mListenerStatus;
     private Button mButtonStartBooking;
     private Button mButtonFinishBooking;
 
@@ -105,6 +126,105 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
 
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
+        mGoogleApiProvider = new GoogleApiProvider(MapDriverBookingActivity.this);
+        mTextViewClientBooking = findViewById(R.id.textViewClientBooking);
+        mTextViewEmailClientBooking = findViewById(R.id.textViewEmailClientBooking);
+        mTextViewOriginClientBooking = findViewById(R.id.textViewOriginClientBooking);
+        mTextViewStatusBooking = findViewById(R.id.textViewStatusBooking);
+        mTextViewDestinationClientBooking = findViewById(R.id.textViewDestinationClientBooking);
+        mButtonStartBooking = findViewById(R.id.btnStartBooking);
+        mButtonFinishBooking = findViewById(R.id.btnFinishBooking);
+        mExtraClientId = getIntent().getStringExtra("idClient");
+        getClient();
+
+        mButtonStartBooking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mIsCloseToClient) {
+                    startBooking();
+                }
+                else {
+                    Toast.makeText(MapDriverBookingActivity.this, "Debes estar mas cerca a la posicion de recogida", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        mButtonFinishBooking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finishBooking();
+            }
+        });
+
+
+
+    }
+
+    private void finishBooking() {
+        mClientBookingProvider.updateStatus(mExtraClientId, "finish");
+        mClientBookingProvider.updateIdHistoryBooking(mExtraClientId);
+        sendNotification("Viaje finalizado");
+        if (mFusedLocation != null) {
+            mFusedLocation.removeLocationUpdates(mLocationCallback);
+        }
+        mGeofireProvider.eliminarLocalizacion(mAuthProvider.obtenerIdConductor());
+        Intent intent = new Intent(MapDriverBookingActivity.this, CalificacionClienteActivity.class);
+       intent.putExtra("idClient", mExtraClientId);
+       startActivity(intent);
+       finish();
+    }
+
+    private void startBooking() {
+        mClientBookingProvider.updateStatus(mExtraClientId, "start");
+        mButtonStartBooking.setVisibility(View.GONE);
+        mButtonFinishBooking.setVisibility(View.VISIBLE);
+        mMap.clear();
+        mMap.addMarker(new MarkerOptions().position(mDestinationLatLng).title("Destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_blue)));
+        drawRoute(mDestinationLatLng);
+        sendNotification("Viaje iniciado");
+    }
+
+    private void sendNotification(final String status) {
+        mTokenProvider.getToken(mExtraClientId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String token = dataSnapshot.child("token").getValue().toString();
+                    Map<String, String> map = new HashMap<>();
+                    map.put("title", "ESTADO DE TU VIAJE");
+                    map.put("body",
+                            "Tu estado del viaje es: " + status
+                    );
+                    FCMBody fcmBody = new FCMBody(token, "high", "4500s", map);
+                    mNotificationProvider.sendNotification(fcmBody).enqueue(new Callback<FCMResponse>() {
+                        @Override
+                        public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
+                            if (response.body() != null) {
+                                if (response.body().getSuccess() != 1) {
+                                    Toast.makeText(MapDriverBookingActivity.this, "No se pudo enviar la notificacion", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            else {
+                                Toast.makeText(MapDriverBookingActivity.this, "No se pudo enviar la notificacion", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<FCMResponse> call, Throwable t) {
+                            Log.d("Error", "Error " + t.getMessage());
+                        }
+                    });
+                }
+                else {
+                    Toast.makeText(MapDriverBookingActivity.this, "No se pudo enviar la notificacion porque el conductor no tiene un token de sesion", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -133,18 +253,122 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
                                     .build()
                     ));
                     actualizarLocalizacion();
-/*
+
                     if (mIsFirstTime) {
                         mIsFirstTime = false;
                         getClientBooking();
                     }
 
-                     */
+
 
                 }
             }
         }
     };
+    //OBTENER LA INFORMACION DEL CLIENTE PARA MOSTRARLE AL CONDUCTOR
+    private void getClient() {
+        mClientProvider.getClient(mExtraClientId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String email = dataSnapshot.child("email").getValue().toString();
+                    String name = dataSnapshot.child("nombre").getValue().toString();
+                    mTextViewClientBooking.setText(name);
+                    mTextViewEmailClientBooking.setText(email);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+    private double getDistanceBetween(LatLng clientLatLng, LatLng driverLatLng) {
+        double distance = 0;
+        Location clientLocation = new Location("");
+        Location driverLocation = new Location("");
+        clientLocation.setLatitude(clientLatLng.latitude);
+        clientLocation.setLongitude(clientLatLng.longitude);
+        driverLocation.setLatitude(driverLatLng.latitude);
+        driverLocation.setLongitude(driverLatLng.longitude);
+        distance = clientLocation.distanceTo(driverLocation);
+        return distance;
+    }
+
+    //===============================================================
+    private void getClientBooking() {
+        mClientBookingProvider.getClientBooking(mExtraClientId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String destination = dataSnapshot.child("destination").getValue().toString();
+                    String origin = dataSnapshot.child("origin").getValue().toString();
+                    double destinatioLat = Double.parseDouble(dataSnapshot.child("destinationLat").getValue().toString());
+                    double destinatioLng= Double.parseDouble(dataSnapshot.child("destinationLng").getValue().toString());
+
+                    double originLat = Double.parseDouble(dataSnapshot.child("originLat").getValue().toString());
+                    double originLng= Double.parseDouble(dataSnapshot.child("originLng").getValue().toString());
+                    mOriginLatLng = new LatLng(originLat, originLng);
+                    mDestinationLatLng = new LatLng(destinatioLat, destinatioLng);
+                    mTextViewOriginClientBooking.setText("recoger en: " + origin);
+                    mTextViewDestinationClientBooking.setText("destino: " + destination);
+                   mMap.addMarker(new MarkerOptions().position(mOriginLatLng).title("Recoger aqui").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_red)));
+                    drawRoute(mOriginLatLng);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+    //===================================================================
+
+    private void drawRoute(LatLng latLng) {
+        mGoogleApiProvider.getDirections(mCurrentLatLng, latLng).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                try {
+
+                    JSONObject jsonObject = new JSONObject(response.body());
+                    JSONArray jsonArray = jsonObject.getJSONArray("routes");
+                    JSONObject route = jsonArray.getJSONObject(0);
+                    JSONObject polylines = route.getJSONObject("overview_polyline");
+                    String points = polylines.getString("points");
+                    mPolylineList = DecodePoints.decodePoly(points);
+                    mPolylineOptions = new PolylineOptions();
+                    mPolylineOptions.color(Color.DKGRAY);
+                    mPolylineOptions.width(13f);
+                    mPolylineOptions.startCap(new SquareCap());
+                    mPolylineOptions.jointType(JointType.ROUND);
+                    mPolylineOptions.addAll(mPolylineList);
+                    mMap.addPolyline(mPolylineOptions);
+
+                    JSONArray legs =  route.getJSONArray("legs");
+                    JSONObject leg = legs.getJSONObject(0);
+                    JSONObject distance = leg.getJSONObject("distance");
+                    JSONObject duration = leg.getJSONObject("duration");
+                    String distanceText = distance.getString("text");
+                    String durationText = duration.getString("text");
+
+
+                } catch(Exception e) {
+                    Log.d("Error", "Error encontrado " + e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
+    }
+
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -169,6 +393,17 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
     private void actualizarLocalizacion() {
         if(mAuthProvider.existSesion()&& mCurrentLatLng!=null){
             mGeofireProvider.guardarLocalizacion(mAuthProvider.obtenerIdConductor(),mCurrentLatLng);
+            if (!mIsCloseToClient) {
+                if (mOriginLatLng != null && mCurrentLatLng != null) {
+                    double distance = getDistanceBetween(mOriginLatLng, mCurrentLatLng); // METROS
+                    if (distance <= 200) {
+                        //mButtonStartBooking.setEnabled(true);
+                        mIsCloseToClient = true;
+                        Toast.makeText(this, "Estas cerca a la posicion de recogida", Toast.LENGTH_SHORT).show();
+                    }
+                }
+           }
+
         }
     }
 

@@ -447,7 +447,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         getMenuInflater().inflate(R.menu.cliente_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
-
+//MENU DE OPCIONES
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.action_lagout){

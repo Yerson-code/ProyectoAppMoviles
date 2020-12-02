@@ -12,7 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.conductor.MapDriverBookingActivity"></activity>
+        <activity android:name=".activities.cliente.CalificacionConductorActivity"></activity>
+        <activity android:name=".activities.conductor.CalificacionClienteActivity" />
+        <activity android:name=".activities.conductor.MapDriverBookingActivity" />
         <activity android:name=".activities.cliente.MapClientBookingActivity" />
 
         <receiver
