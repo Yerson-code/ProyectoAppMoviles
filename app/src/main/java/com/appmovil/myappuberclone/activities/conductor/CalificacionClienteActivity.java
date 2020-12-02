@@ -117,7 +117,7 @@ public class CalificacionClienteActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(CalificacionClienteActivity.this, "La calificacion se guardo correctamente", Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(CalificacionClienteActivity.this, MapClienteActivity.class);
+                                Intent intent = new Intent(CalificacionClienteActivity.this, MapConductorActivity.class);
                                 startActivity(intent);
                                 finish();
                             }
