@@ -114,16 +114,16 @@
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </LinearLayout> 
 
             <TextView
                 android:id="@+id/textViewCounter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="10"
+                android:text="30"
                 android:textAlignment="center"
                 android:textSize="40sp"
-                android:layout_marginTop="25dp"/>
+                android:layout_marginTop="15dp"/>
 
         </LinearLayout>
     </ScrollView>

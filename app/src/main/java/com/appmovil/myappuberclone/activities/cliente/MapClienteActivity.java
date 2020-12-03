@@ -453,6 +453,10 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         if(item.getItemId() == R.id.action_lagout){
             logout();
         }
+        if(item.getItemId() == R.id.action_actualizarPerfil){
+            Intent intent=new Intent(MapClienteActivity.this,ActualizarPerfilClienteActivity.class);
+                startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
     void logout(){

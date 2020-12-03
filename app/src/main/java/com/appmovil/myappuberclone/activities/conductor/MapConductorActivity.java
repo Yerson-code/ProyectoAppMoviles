@@ -317,6 +317,10 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
         if(item.getItemId() == R.id.action_lagout){
           logout();
         }
+        if(item.getItemId() == R.id.action_actualizar){
+            Intent intent=new Intent(MapConductorActivity.this,ActualizarPerfilConductorActivity.class);
+            startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
     void logout(){

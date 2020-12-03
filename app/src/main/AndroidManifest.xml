@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -13,11 +14,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.conductor.NotificacionLlamadaActivity"></activity>
+        <activity android:name=".activities.conductor.ActualizarPerfilConductorActivity"></activity>
+        <activity
+            android:name=".activities.cliente.ActualizarPerfilClienteActivity"
+            android:parentActivityName=".activities.cliente.MapClienteActivity" />
+        <activity android:name=".activities.conductor.NotificacionLlamadaActivity" />
         <activity android:name=".activities.cliente.CalificacionConductorActivity" />
         <activity android:name=".activities.conductor.CalificacionClienteActivity" />
-        <activity android:name=".activities.conductor.MapDriverBookingActivity" />
-        <activity android:name=".activities.cliente.MapClientBookingActivity" />
+        <activity android:name=".activities.conductor.MapDriverBookingActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".activities.cliente.MapClientBookingActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <receiver
             android:name=".receivers.AcceptReceiver"

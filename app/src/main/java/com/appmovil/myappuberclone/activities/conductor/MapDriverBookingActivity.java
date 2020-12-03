@@ -16,6 +16,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +58,7 @@ import com.google.android.gms.maps.model.SquareCap;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -80,7 +82,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
     private NotificationProvider mNotificationProvider;
     private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocation;
-
+    private ImageView mImageViewBooking;
     private final static int LOCATION_REQUEST_CODE = 1;
     private final static int SETTINGS_REQUEST_CODE = 2;
 
@@ -113,8 +115,8 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_driver_booking);
-        getSupportActionBar().setTitle("Viaje Conductor");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       // getSupportActionBar().setTitle("Viaje Conductor");
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mAuthProvider = new AuthProvider();
         mGeofireProvider = new GeoFireProvider("Conductores_Trabajando");
         mTokenProvider = new TokenProvider();
@@ -135,6 +137,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
         mButtonStartBooking = findViewById(R.id.btnStartBooking);
         mButtonFinishBooking = findViewById(R.id.btnFinishBooking);
         mExtraClientId = getIntent().getStringExtra("idClient");
+        mImageViewBooking = findViewById(R.id.imageViewClientBooking);
         getClient();
 
         mButtonStartBooking.setOnClickListener(new View.OnClickListener() {
@@ -273,6 +276,11 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
                 if (dataSnapshot.exists()) {
                     String email = dataSnapshot.child("email").getValue().toString();
                     String name = dataSnapshot.child("nombre").getValue().toString();
+                    String image = "";
+                    if (dataSnapshot.hasChild("image")) {
+                        image = dataSnapshot.child("image").getValue().toString();
+                        Picasso.with(MapDriverBookingActivity.this).load(image).into(mImageViewBooking);
+                    }
                     mTextViewClientBooking.setText(name);
                     mTextViewEmailClientBooking.setText(email);
                 }

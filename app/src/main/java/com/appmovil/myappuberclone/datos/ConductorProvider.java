@@ -6,6 +6,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ConductorProvider {
     DatabaseReference mDatabse;
     public ConductorProvider(){
@@ -17,5 +20,13 @@ public class ConductorProvider {
         }
     public DatabaseReference getDriver(String idDriver) {
         return mDatabse.child(idDriver);
+    }
+    public Task<Void> actualizar(Conductor driver) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("nombre", driver.getNombre());
+        map.put("image", driver.getImage());
+        map.put("marcaVehiculo", driver.getMarcaVehiculo());
+        map.put("placaVehiculo", driver.getPlacaVehiculo());
+        return mDatabse.child(driver.getId()).updateChildren(map);
     }
 }

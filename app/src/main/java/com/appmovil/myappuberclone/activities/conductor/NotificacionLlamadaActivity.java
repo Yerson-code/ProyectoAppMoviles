@@ -45,7 +45,7 @@ public class NotificacionLlamadaActivity extends AppCompatActivity {
 
     private MediaPlayer mMediaPlayer;
 
-    private int mCounter = 10;
+    private int mCounter = 30;
     private Handler mHandler;
 
     Runnable runnable = new Runnable() {

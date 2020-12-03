@@ -21,6 +21,12 @@ public class ClienteProvider {
         map.put("email",cliente.getCorreo());
         return  mDatabse.child(cliente.getId()).setValue(map);
     }
+    public Task<Void> actualizar(Cliente client) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("nombre", client.getNombre());
+        map.put("image", client.getImage());
+        return mDatabse.child(client.getId()).updateChildren(map);
+    }
 
     public DatabaseReference getClient(String idClient) {
         return mDatabse.child(idClient);

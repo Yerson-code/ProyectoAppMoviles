@@ -6,6 +6,7 @@ public class Conductor {
     String correo;
     String marcaVehiculo;
     String placaVehiculo;
+    String image;
 
     public Conductor() {
     }
@@ -16,6 +17,23 @@ public class Conductor {
         this.correo = correo;
         this.marcaVehiculo = marcaVehiculo;
         this.placaVehiculo = placaVehiculo;
+    }
+
+    public Conductor(String id, String nombre, String correo, String marcaVehiculo, String placaVehiculo, String image) {
+        this.id = id;
+        this.nombre = nombre;
+        this.correo = correo;
+        this.marcaVehiculo = marcaVehiculo;
+        this.placaVehiculo = placaVehiculo;
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getId() {
