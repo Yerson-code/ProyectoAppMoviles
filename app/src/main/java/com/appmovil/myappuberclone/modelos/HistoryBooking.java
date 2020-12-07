@@ -1,4 +1,4 @@
-package com.appmovil.myappuberclone.datos;
+package com.appmovil.myappuberclone.modelos;
 
 public class HistoryBooking {
 

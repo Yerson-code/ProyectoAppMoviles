@@ -32,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 
 public class ActualizarPerfilClienteActivity extends AppCompatActivity {
 
@@ -97,7 +98,10 @@ public class ActualizarPerfilClienteActivity extends AppCompatActivity {
                         image = dataSnapshot.child("image").getValue().toString();
                         Picasso.with(ActualizarPerfilClienteActivity.this).load(image).into(mImageViewProfile);
                     }
-                    mTextViewName.setText(name);
+
+
+                        mTextViewName.setText(name);
+
                 }
             }
 

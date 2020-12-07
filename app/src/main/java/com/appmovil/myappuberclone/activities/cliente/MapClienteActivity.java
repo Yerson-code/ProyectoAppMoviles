@@ -457,6 +457,10 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             Intent intent=new Intent(MapClienteActivity.this,ActualizarPerfilClienteActivity.class);
                 startActivity(intent);
         }
+        if(item.getItemId() == R.id.action_historial){
+            Intent intent=new Intent(MapClienteActivity.this,HistorialViajeClienteActivity.class);
+            startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
     void logout(){

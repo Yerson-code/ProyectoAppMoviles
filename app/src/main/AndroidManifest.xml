@@ -14,15 +14,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.conductor.ActualizarPerfilConductorActivity"></activity>
+        <activity android:name=".activities.conductor.DetalleHistorialViajeConductorActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" ></activity>
+        <activity
+            android:name=".activities.cliente.DetalleHistorialViajeClienteActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.conductor.HistorialViajesConductorActivity"
+            android:parentActivityName=".activities.conductor.MapConductorActivity" />
+        <activity
+            android:name=".activities.cliente.HistorialViajeClienteActivity"
+            android:parentActivityName=".activities.cliente.MapClienteActivity" />
+        <activity
+            android:name=".activities.conductor.ActualizarPerfilConductorActivity"
+            android:parentActivityName=".activities.conductor.MapConductorActivity" />
         <activity
             android:name=".activities.cliente.ActualizarPerfilClienteActivity"
             android:parentActivityName=".activities.cliente.MapClienteActivity" />
         <activity android:name=".activities.conductor.NotificacionLlamadaActivity" />
         <activity android:name=".activities.cliente.CalificacionConductorActivity" />
         <activity android:name=".activities.conductor.CalificacionClienteActivity" />
-        <activity android:name=".activities.conductor.MapDriverBookingActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".activities.conductor.MapDriverBookingActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".activities.cliente.MapClientBookingActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />

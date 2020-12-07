@@ -6,5 +6,6 @@
     <color name="colorSecondary">#15202B</color>
     <color name="colorBlueButton">#1DA1F2</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlueLight">#03A9F4</color>
 
 </resources>

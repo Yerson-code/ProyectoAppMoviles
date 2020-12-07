@@ -321,6 +321,10 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
             Intent intent=new Intent(MapConductorActivity.this,ActualizarPerfilConductorActivity.class);
             startActivity(intent);
         }
+        if(item.getItemId() == R.id.action_historialDriver){
+            Intent intent=new Intent(MapConductorActivity.this,HistorialViajesConductorActivity.class);
+            startActivity(intent);
+        }
         return super.onOptionsItemSelected(item);
     }
     void logout(){

@@ -1,5 +1,6 @@
 package com.appmovil.myappuberclone.datos;
 
+import com.appmovil.myappuberclone.modelos.HistoryBooking;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

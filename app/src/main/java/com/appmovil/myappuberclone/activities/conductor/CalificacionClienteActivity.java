@@ -16,9 +16,10 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.appmovil.myappuberclone.R;
 import com.appmovil.myappuberclone.activities.cliente.MapClienteActivity;
 import com.appmovil.myappuberclone.datos.ClientBookingProvider;
-import com.appmovil.myappuberclone.datos.HistoryBooking;
+
 import com.appmovil.myappuberclone.datos.HistoryBookingProvider;
 import com.appmovil.myappuberclone.modelos.ClientBooking;
+import com.appmovil.myappuberclone.modelos.HistoryBooking;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

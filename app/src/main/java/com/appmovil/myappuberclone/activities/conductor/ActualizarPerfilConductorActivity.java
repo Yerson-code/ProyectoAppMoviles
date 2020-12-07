@@ -33,6 +33,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 
 public class ActualizarPerfilConductorActivity extends AppCompatActivity {
     private ImageView mImageViewProfile;
@@ -121,9 +122,12 @@ public class ActualizarPerfilConductorActivity extends AppCompatActivity {
                         image = dataSnapshot.child("image").getValue().toString();
                         Picasso.with(ActualizarPerfilConductorActivity.this).load(image).into(mImageViewProfile);
                     }
-                    mTextViewName.setText(name);
-                    mTextViewBrandVehicle.setText(vehicleBrand);
-                    mTextViewPlateVehicle.setText(vehiclePlate);
+
+                        mTextViewName.setText(name);
+                        mTextViewBrandVehicle.setText(vehicleBrand);
+                        mTextViewPlateVehicle.setText(vehiclePlate);
+
+
                 }
             }
 
