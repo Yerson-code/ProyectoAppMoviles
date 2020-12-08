@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
@@ -34,10 +35,12 @@ import com.appmovil.myappuberclone.datos.ClientBookingProvider;
 import com.appmovil.myappuberclone.datos.ClienteProvider;
 import com.appmovil.myappuberclone.datos.GeoFireProvider;
 import com.appmovil.myappuberclone.datos.GoogleApiProvider;
+import com.appmovil.myappuberclone.datos.InfoProvider;
 import com.appmovil.myappuberclone.datos.NotificationProvider;
 import com.appmovil.myappuberclone.datos.TokenProvider;
 import com.appmovil.myappuberclone.modelos.FCMBody;
 import com.appmovil.myappuberclone.modelos.FCMResponse;
+import com.appmovil.myappuberclone.modelos.Info;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -95,7 +98,9 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
     private TextView mTextViewOriginClientBooking;
     private TextView mTextViewDestinationClientBooking;
     private TextView mTextViewStatusBooking;
-
+    private TextView txtTime;
+    private InfoProvider mInfoProvider;
+    private Info mInfo;
     private String mExtraClientId;
 
     private LatLng mOriginLatLng;
@@ -104,12 +109,35 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
     private GoogleApiProvider mGoogleApiProvider;
     private List<LatLng> mPolylineList;
     private PolylineOptions mPolylineOptions;
-
+    private boolean viajeIniciado=false;
     private boolean mIsFirstTime = true;
     private boolean mIsCloseToClient = false;
     private ValueEventListener mListenerStatus;
     private Button mButtonStartBooking;
     private Button mButtonFinishBooking;
+    private Location mPreviousLocation=new Location("");
+    double mDistanceMeters=1;
+    double mMinutes=0;
+    double mSeconds=0;
+    boolean mSecondsIsOver=false;
+    Handler mHandler=new Handler();
+    Runnable runnable=new Runnable() {
+        @Override
+        public void run() {
+            mSeconds++;
+            if(!mSecondsIsOver){
+                txtTime.setText(mSeconds+" Seg");
+            }else{
+                txtTime.setText(mMinutes+" Min "+ mSeconds);
+            }
+          if(mSeconds==59){
+                mSeconds=0;
+                mMinutes++;
+                mSecondsIsOver  =true;
+            }
+            mHandler.postDelayed(runnable,1000);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +153,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
         mNotificationProvider = new NotificationProvider();
 
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
-
+        mInfoProvider=new InfoProvider();
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
         mGoogleApiProvider = new GoogleApiProvider(MapDriverBookingActivity.this);
@@ -138,8 +166,9 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
         mButtonFinishBooking = findViewById(R.id.btnFinishBooking);
         mExtraClientId = getIntent().getStringExtra("idClient");
         mImageViewBooking = findViewById(R.id.imageViewClientBooking);
+        txtTime=findViewById(R.id.textViewTime);
         getClient();
-
+        getInfo();
         mButtonStartBooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -185,6 +214,8 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
         mMap.addMarker(new MarkerOptions().position(mDestinationLatLng).title("Destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_blue)));
         drawRoute(mDestinationLatLng);
         sendNotification("Viaje iniciado");
+        mHandler.postDelayed(runnable,1000);
+        viajeIniciado=true;
     }
 
     private void sendNotification(final String status) {
@@ -241,7 +272,11 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
                     if (mMarker != null) {
                         mMarker.remove();
                     }
-
+                    if (viajeIniciado){
+                        mDistanceMeters=mDistanceMeters+mPreviousLocation.distanceTo(location);
+                            
+                    }
+                    mPreviousLocation=location;
                     mMarker = mMap.addMarker(new MarkerOptions().position(
                             new LatLng(location.getLatitude(), location.getLongitude())
                             )
@@ -467,6 +502,23 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
             isActive = true;
         }
         return isActive;
+    }
+    private void getInfo() {
+
+        mInfoProvider.getInfo().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    mInfo = snapshot.getValue(Info.class);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void disconnect() {
