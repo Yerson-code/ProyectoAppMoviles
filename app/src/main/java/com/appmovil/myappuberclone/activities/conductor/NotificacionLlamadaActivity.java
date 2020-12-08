@@ -71,9 +71,7 @@ public class NotificacionLlamadaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notificacion_llamada);
-        getSupportActionBar().setTitle("Notificacion de viaje");
-
-        mTextViewDestination = findViewById(R.id.textViewDestination);
+               mTextViewDestination = findViewById(R.id.textViewDestination);
         mTextViewOrigin = findViewById(R.id.textViewOrigin);
         mTextViewMin = findViewById(R.id.textViewMin);
         mTextViewDistance = findViewById(R.id.textViewDistance);

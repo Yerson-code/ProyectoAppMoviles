@@ -31,7 +31,8 @@
         <activity
             android:name=".activities.cliente.ActualizarPerfilClienteActivity"
             android:parentActivityName=".activities.cliente.MapClienteActivity" />
-        <activity android:name=".activities.conductor.NotificacionLlamadaActivity" />
+        <activity android:name=".activities.conductor.NotificacionLlamadaActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".activities.cliente.CalificacionConductorActivity" />
         <activity android:name=".activities.conductor.CalificacionClienteActivity" />
         <activity
@@ -69,6 +70,7 @@
             android:parentActivityName=".activities.SeleccionarOpcionActivity" />
         <activity
             android:name=".activities.LoginActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:parentActivityName=".activities.SeleccionarOpcionActivity" />
         <activity
             android:name=".activities.cliente.RegistrarseActivity"
