@@ -27,10 +27,12 @@
             android:parentActivityName=".activities.cliente.MapClienteActivity" />
         <activity
             android:name=".activities.conductor.ActualizarPerfilConductorActivity"
-            android:parentActivityName=".activities.conductor.MapConductorActivity" />
+            android:parentActivityName=".activities.conductor.MapConductorActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".activities.cliente.ActualizarPerfilClienteActivity"
-            android:parentActivityName=".activities.cliente.MapClienteActivity" />
+            android:parentActivityName=".activities.cliente.MapClienteActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".activities.conductor.NotificacionLlamadaActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".activities.cliente.CalificacionConductorActivity" />

@@ -60,8 +60,7 @@ public class ActualizarPerfilClienteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actualizar_perfil_cliente);
-        getSupportActionBar().setTitle("Actualizar perfil");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         mImageViewProfile = findViewById(R.id.imageViewProfile);
         mButtonUpdate = findViewById(R.id.btnUpdateProfile);

@@ -62,8 +62,7 @@ public class ActualizarPerfilConductorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actualizar_perfil_conductor);
-        getSupportActionBar().setTitle("Actualizar Perfil");
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
         mImageViewProfile = findViewById(R.id.imageViewProfile);
         mButtonUpdate = findViewById(R.id.btnUpdateProfile);
