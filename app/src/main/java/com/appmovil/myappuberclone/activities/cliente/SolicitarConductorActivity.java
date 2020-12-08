@@ -69,8 +69,6 @@ public class SolicitarConductorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solicitar_conductor);
-        getSupportActionBar().setTitle("Solicitar conductor");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mAnimation = findViewById(R.id.animation);
         mTextViewLookingFor = findViewById(R.id.textViewLookingFor);
         mButtonCancelRequest = findViewById(R.id.btnCancelRequest);
