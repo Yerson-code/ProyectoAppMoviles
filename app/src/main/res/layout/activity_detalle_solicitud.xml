@@ -5,117 +5,196 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/colorPrimaryDark"
     tools:context=".activities.cliente.DetalleSolicitudActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
     <fragment
         android:id="@+id/map"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="165dp"
         android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="20dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                />
-            <TextView
-                android:id="@+id/txtViewOrigin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="carrera calle 25 "/>
-        </LinearLayout>
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                android:background="#C3BDBD"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="20dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:text="Destino:"/>
-            <TextView
-                android:id="@+id/txtViewDestino"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-               />
-        </LinearLayout>
+    <com.github.florent37.shapeofview.shapes.BubbleView
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        app:shape_bubble_arrowHeight="15dp"
+        app:shape_bubble_arrowWidth="15dp"
+        app:shape_bubble_arrowPosition="top"
+        app:shape_bubble_borderRadius="20dp"
+        android:layout_gravity="bottom"
+        >
+
         <View
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:background="#C3BDBD"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"/>
-        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="20dp">
+            android:background="@color/colorPrimaryDark" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:text="Tiempo:"/>
-            <TextView
-                android:id="@+id/txtViewTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-               />
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:text="Distancia:"/>
-            <TextView
-                android:id="@+id/txtViewDistancia"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                />
-            </LinearLayout>
-        </LinearLayout>
-            <Button
-                android:id="@+id/btnSolicitarAhora"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Solicitar Ahora"
-                android:background="@color/colorPrimaryDark"
-                android:textColor="@color/colorWhite"/>
-    </LinearLayout>
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="30dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:text="Origen"
+                        android:textColor="@color/colorWhite"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/txtViewOrigin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="2"
+                        android:text="Calle Falsa"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorWhite"
+                        android:text="Destino"/>
+                    <TextView
+                        android:id="@+id/txtViewDestino"
+                        android:text="Calle falsa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:maxLines="2"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorWhite"
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
 
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="30dp">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:gravity="center">
+                    
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_timer"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorWhite"
+                        android:text="Tiempo"/>
+                    <TextView
+                        android:id="@+id/txtViewTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorWhite"
+                        android:text="0M"
+                        />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_map"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorWhite"
+                        android:text="Distancia:"/>
+                    <TextView
+                        android:id="@+id/txtViewDistancia"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textColor="@color/colorWhite"
+                        android:text="0km"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </com.github.florent37.shapeofview.shapes.BubbleView>
+
+
+
+    <Button
+        android:id="@+id/btnSolicitarAhora"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="Solicitar Ahora"
+        android:background="@drawable/round_button"
+        android:layout_gravity="right|top"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:textColor="@color/colorWhite"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/circleImageBack"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_arrow_back_black"
+        android:layout_gravity="left|top"
+        app:civ_circle_background_color="@color/colorPrimaryDark"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

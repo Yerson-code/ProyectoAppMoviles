@@ -56,10 +56,12 @@
 
         <activity
             android:name=".activities.cliente.SolicitarConductorActivity"
-            android:parentActivityName=".activities.cliente.DetalleSolicitudActivity" />
+            android:parentActivityName=".activities.cliente.DetalleSolicitudActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".activities.cliente.DetalleSolicitudActivity"
-            android:parentActivityName=".activities.cliente.MapClienteActivity" />
+            android:parentActivityName=".activities.cliente.MapClienteActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".activities.conductor.MapConductorActivity" />
         <activity android:name=".activities.cliente.MapClienteActivity" />
         <activity
