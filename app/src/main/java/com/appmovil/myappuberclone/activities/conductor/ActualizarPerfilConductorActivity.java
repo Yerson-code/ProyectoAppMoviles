@@ -35,6 +35,8 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ActualizarPerfilConductorActivity extends AppCompatActivity {
     private ImageView mImageViewProfile;
     private Button mButtonUpdate;
@@ -48,6 +50,8 @@ public class ActualizarPerfilConductorActivity extends AppCompatActivity {
 
     private File mImageFile;
     private String mImage;
+
+    private CircleImageView mCircleImageBack;
 
     private final int GALLERY_REQUEST = 1;
     private ProgressDialog mProgressDialog;
@@ -74,6 +78,15 @@ public class ActualizarPerfilConductorActivity extends AppCompatActivity {
         mProgressDialog = new ProgressDialog(this);
 
         getDriverInfo();
+
+        mCircleImageBack = findViewById(R.id.circleImageBack);
+        mCircleImageBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
 
         mImageViewProfile.setOnClickListener(new View.OnClickListener() {
             @Override
