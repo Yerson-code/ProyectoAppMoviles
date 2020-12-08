@@ -132,4 +132,21 @@
  
         </LinearLayout>
     </com.github.florent37.shapeofview.shapes.BubbleView>
+
+<androidx.cardview.widget.CardView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|right"
+    android:layout_marginBottom="155dp"
+    android:layout_marginRight="50dp"
+    android:padding="30dp"
+    android:elevation="5dp">
+  <TextView
+        android:id="@+id/textViewTime"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:text="Tiempo" />
+</androidx.cardview.widget.CardView>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
