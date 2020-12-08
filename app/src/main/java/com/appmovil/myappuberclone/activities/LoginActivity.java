@@ -62,9 +62,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        getSupportActionBar().setTitle("Login");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         mPLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
