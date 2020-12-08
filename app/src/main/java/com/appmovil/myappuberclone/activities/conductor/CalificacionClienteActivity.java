@@ -62,7 +62,7 @@ public class CalificacionClienteActivity extends AppCompatActivity {
         mExtraClientId = getIntent().getStringExtra("idClient");
         mExtraPrecio = getIntent().getDoubleExtra("precio", 0);
 
-        mTextViewPrecio.setText(mExtraPrecio + "$");
+        mTextViewPrecio.setText(String.format("%.1f", mExtraPrecio) + "$");
 
         mRatinBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override

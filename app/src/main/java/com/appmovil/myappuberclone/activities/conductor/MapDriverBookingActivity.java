@@ -200,6 +200,9 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
             mFusedLocation.removeLocationUpdates(mLocationCallback);
         }
         mGeofireProvider.eliminarLocalizacion(mAuthProvider.obtenerIdConductor());
+        if(mHandler != null){
+            mHandler.removeCallbacks(runnable);
+        }
         CalcularViaje();
     }
 
@@ -555,12 +558,23 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
         }
     }
     private void CalcularViaje(){
-       //double PrecioMin =
+        if(mMinutes ==0){
+            mMinutes = 1;
+        }
 
-       /* Intent intent = new Intent(MapDriverBookingActivity.this, CalificacionClienteActivity.class);
+       double PrecioMin = mMinutes * mInfo.getMin();
+       double Preciokm = (mDistanceMeters / 1000) * mInfo.getKm();
+       double total = PrecioMin + Preciokm;
+
+       Log.d("VALORES", "Min total: " + mMinutes);
+       Log.d("VALORES", "KM toatl" + (mDistanceMeters / 1000));
+
+
+        Intent intent = new Intent(MapDriverBookingActivity.this, CalificacionClienteActivity.class);
         intent.putExtra("idClient", mExtraClientId);
+        intent.putExtra("precio", total);
         startActivity(intent);
-        finish();*/
+        finish();
     }
 
     private void checkLocationPermissions() {

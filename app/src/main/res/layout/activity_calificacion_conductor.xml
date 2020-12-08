@@ -55,9 +55,10 @@
             android:layout_height="wrap_content"
             android:text="Desde"
             android:textAlignment="center"
+            android:maxLines="3"
             android:textSize="22sp"
             android:textColor="@android:color/black"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="10dp"/>
 
         <TextView
             android:id="@+id/textViewOriginCalification"
@@ -73,9 +74,10 @@
             android:layout_height="wrap_content"
             android:text="Hasta"
             android:textAlignment="center"
+            android:maxLines="3"
             android:textSize="22sp"
             android:textColor="@android:color/black"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="10dp"/>
 
         <TextView
             android:id="@+id/textViewDestinationCalification"
@@ -93,7 +95,7 @@
             android:textAlignment="center"
             android:textSize="22sp"
             android:textColor="@android:color/black"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="10dp"/>
 
         <TextView
             android:id="@+id/textViewPrecio"
@@ -110,7 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="10dp" />
 
     </LinearLayout>
 
