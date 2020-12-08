@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import dmax.dialog.SpotsDialog;
 
 public class LoginActivity extends AppCompatActivity {
@@ -30,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     TextInputEditText mTxtcorreo;
     TextInputEditText mTxtpasword;
     Button mPLogin;
+    private CircleImageView mCircleImageBack;
 
     FirebaseAuth mAuth;
     DatabaseReference mDtabase;
@@ -51,6 +53,14 @@ public class LoginActivity extends AppCompatActivity {
         mDtabase = FirebaseDatabase.getInstance().getReference();
 
         mdialog =new SpotsDialog.Builder().setContext(LoginActivity.this).setMessage("Espere un momento").build();
+
+        mCircleImageBack = findViewById(R.id.circleImageBack);
+        mCircleImageBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         getSupportActionBar().setTitle("Login");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
