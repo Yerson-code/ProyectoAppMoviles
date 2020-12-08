@@ -133,7 +133,7 @@
         android:id="@+id/circleImageBack"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/ic_arrow_back_black"
+        android:src="@drawable/ic_baseline_arrow_back_24"
         android:layout_gravity="left|top"
         app:civ_circle_background_color="@color/colorWhite"
         android:layout_marginTop="10dp"
