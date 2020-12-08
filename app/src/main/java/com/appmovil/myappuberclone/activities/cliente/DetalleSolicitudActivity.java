@@ -35,6 +35,7 @@ import org.w3c.dom.Text;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,7 +50,7 @@ public class DetalleSolicitudActivity extends AppCompatActivity implements OnMap
     private double extraDestinationLgn;
     private LatLng origingLatLng;
     private LatLng destinationLatLng;
-
+    private CircleImageView mCircleImageBack;
     private String mExtraOrigin;
     private String mExtraDestination;
 
@@ -70,8 +71,7 @@ public class DetalleSolicitudActivity extends AppCompatActivity implements OnMap
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_solicitud);
-        getSupportActionBar().setTitle("Detalle de viaje");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mMapFragment.getMapAsync(this);
         extraOriginLat=getIntent().getDoubleExtra("origen_lat",0);
@@ -90,6 +90,7 @@ public class DetalleSolicitudActivity extends AppCompatActivity implements OnMap
         btnSolicitarAhora=(Button)findViewById(R.id.btnSolicitarAhora);
         txtorigen.setText(origen);
         txtDestino.setText(destino);
+        mCircleImageBack = findViewById(R.id.circleImageBack);
         btnSolicitarAhora.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,7 +98,12 @@ public class DetalleSolicitudActivity extends AppCompatActivity implements OnMap
             }
         });
 
-
+        mCircleImageBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void irSolicitarConductor() {
