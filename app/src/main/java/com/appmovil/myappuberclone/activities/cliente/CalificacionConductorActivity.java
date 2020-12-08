@@ -31,7 +31,7 @@ public class CalificacionConductorActivity extends AppCompatActivity {
     private LottieAnimationView mAnimation;
     private TextView mTextViewOrigin;
     private TextView mTextViewDestination;
-    //private TextView mTextViewPrecio;
+    private TextView mTextViewPrecio;
     private RatingBar mRatinBar;
     private Button mButtonCalification;
 
@@ -52,7 +52,7 @@ public class CalificacionConductorActivity extends AppCompatActivity {
         mAnimation.playAnimation();
 
         mTextViewDestination = findViewById(R.id.textViewDestinationCalification);
-       // mTextViewPrecio = findViewById(R.id.textViewPrecio);
+        mTextViewPrecio = findViewById(R.id.textViewPrecio);
         mTextViewOrigin = findViewById(R.id.textViewOriginCalification);
         mRatinBar = findViewById(R.id.ratingbarCalification);
         mButtonCalification = findViewById(R.id.btnCalification);
@@ -85,6 +85,7 @@ public class CalificacionConductorActivity extends AppCompatActivity {
                     ClientBooking clientBooking = dataSnapshot.getValue(ClientBooking.class);
                     mTextViewOrigin.setText(clientBooking.getOrigin());
                     mTextViewDestination.setText(clientBooking.getDestination());
+                    mTextViewPrecio.setText(String.format("%.1f", clientBooking.getPrice()) + "$");
                     mHistoryBooking = new HistoryBooking(
                             clientBooking.getIdHistoryBooking(),
                             clientBooking.getIdClient(),

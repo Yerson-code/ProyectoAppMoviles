@@ -58,6 +58,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.SquareCap;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -193,17 +194,22 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
     }
 
     private void finishBooking() {
-        mClientBookingProvider.updateStatus(mExtraClientId, "finish");
-        mClientBookingProvider.updateIdHistoryBooking(mExtraClientId);
-        sendNotification("Viaje finalizado");
-        if (mFusedLocation != null) {
-            mFusedLocation.removeLocationUpdates(mLocationCallback);
-        }
-        mGeofireProvider.eliminarLocalizacion(mAuthProvider.obtenerIdConductor());
-        if(mHandler != null){
-            mHandler.removeCallbacks(runnable);
-        }
-        CalcularViaje();
+        mClientBookingProvider.updateIdHistoryBooking(mExtraClientId).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                sendNotification("Viaje finalizado");
+                if (mFusedLocation != null) {
+                    mFusedLocation.removeLocationUpdates(mLocationCallback);
+                }
+                mGeofireProvider.eliminarLocalizacion(mAuthProvider.obtenerIdConductor());
+                if(mHandler != null){
+                    mHandler.removeCallbacks(runnable);
+                }
+                CalcularViaje();
+            }
+        });
+
+
     }
 
     private void startBooking() {
@@ -274,7 +280,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
                     }
                     if (viajeIniciado){
                         mDistanceMeters=mDistanceMeters+mPreviousLocation.distanceTo(location);
-                            
+
                     }
                     mPreviousLocation=location;
                     mMarker = mMap.addMarker(new MarkerOptions().position(
@@ -564,17 +570,23 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
 
        double PrecioMin = mMinutes * mInfo.getMin();
        double Preciokm = (mDistanceMeters / 1000) * mInfo.getKm();
-       double total = PrecioMin + Preciokm;
-
+       final double  total = PrecioMin + Preciokm;
+        mClientBookingProvider.updatePrice(mExtraClientId,total).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                mClientBookingProvider.updateStatus(mExtraClientId, "finish");
+                Intent intent = new Intent(MapDriverBookingActivity.this, CalificacionClienteActivity.class);
+                intent.putExtra("idClient", mExtraClientId);
+                intent.putExtra("precio", total);
+                startActivity(intent);
+                finish();
+            }
+        });
        Log.d("VALORES", "Min total: " + mMinutes);
        Log.d("VALORES", "KM toatl" + (mDistanceMeters / 1000));
 
 
-        Intent intent = new Intent(MapDriverBookingActivity.this, CalificacionClienteActivity.class);
-        intent.putExtra("idClient", mExtraClientId);
-        intent.putExtra("precio", total);
-        startActivity(intent);
-        finish();
+
     }
 
     private void checkLocationPermissions() {
