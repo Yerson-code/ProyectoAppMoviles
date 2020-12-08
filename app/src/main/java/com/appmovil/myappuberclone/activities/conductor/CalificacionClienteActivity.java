@@ -31,6 +31,7 @@ public class CalificacionClienteActivity extends AppCompatActivity {
     private LottieAnimationView mAnimation;
     private TextView mTextViewOrigin;
     private TextView mTextViewDestination;
+    private  TextView mTextViewPrecio;
     private RatingBar mRatinBar;
     private Button mButtonCalification;
 
@@ -42,6 +43,7 @@ public class CalificacionClienteActivity extends AppCompatActivity {
    private HistoryBookingProvider mHistoryBookingProvider;
 
     private float mCalification = 0;
+    private  double mExtraPrecio = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,7 @@ public class CalificacionClienteActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Calificacion del cliente");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mTextViewDestination = findViewById(R.id.textViewDestinationCalification);
+        mTextViewPrecio = findViewById(R.id.textViewPrecio);
         mTextViewOrigin = findViewById(R.id.textViewOriginCalification);
         mRatinBar = findViewById(R.id.ratingbarCalification);
         mButtonCalification = findViewById(R.id.btnCalification);
@@ -57,6 +60,9 @@ public class CalificacionClienteActivity extends AppCompatActivity {
         mHistoryBookingProvider = new HistoryBookingProvider();
 
         mExtraClientId = getIntent().getStringExtra("idClient");
+        mExtraPrecio = getIntent().getDoubleExtra("precio", 0);
+
+        mTextViewPrecio.setText(mExtraPrecio + "$");
 
         mRatinBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override

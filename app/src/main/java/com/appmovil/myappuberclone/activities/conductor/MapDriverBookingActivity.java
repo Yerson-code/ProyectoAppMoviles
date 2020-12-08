@@ -171,10 +171,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
             mFusedLocation.removeLocationUpdates(mLocationCallback);
         }
         mGeofireProvider.eliminarLocalizacion(mAuthProvider.obtenerIdConductor());
-        Intent intent = new Intent(MapDriverBookingActivity.this, CalificacionClienteActivity.class);
-       intent.putExtra("idClient", mExtraClientId);
-       startActivity(intent);
-       finish();
+        CalcularViaje();
     }
 
     private void startBooking() {
@@ -504,6 +501,14 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
                 showAlertDialogNOGPS();
             }
         }
+    }
+    private void CalcularViaje(){
+       //double PrecioMin =
+
+       /* Intent intent = new Intent(MapDriverBookingActivity.this, CalificacionClienteActivity.class);
+        intent.putExtra("idClient", mExtraClientId);
+        startActivity(intent);
+        finish();*/
     }
 
     private void checkLocationPermissions() {
