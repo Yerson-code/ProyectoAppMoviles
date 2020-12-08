@@ -130,7 +130,7 @@
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="@color/colorWhite"
-                        android:text="Tiempo"/>
+                        android:text="Tiempo y distancia"/>
                     <TextView
                         android:id="@+id/txtViewTime"
                         android:layout_width="wrap_content"
@@ -152,21 +152,21 @@
                 <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:src="@drawable/ic_map"/>
+                    android:src="@drawable/ic_baseline_monetization_on_24"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="@color/colorWhite"
-                        android:text="Distancia:"/>
+                        android:text="Precio:"/>
                     <TextView
-                        android:id="@+id/txtViewDistancia"
+                        android:id="@+id/txtprecio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         android:textColor="@color/colorWhite"
-                        android:text="0km"
+                        android:text="0$"
                         />
                 </LinearLayout>
             </LinearLayout>

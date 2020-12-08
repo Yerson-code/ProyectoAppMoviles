@@ -1,5 +1,6 @@
 package com.appmovil.myappuberclone.activities.cliente;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 import com.appmovil.myappuberclone.R;
 import com.appmovil.myappuberclone.Utils.DecodePoints;
 import com.appmovil.myappuberclone.datos.GoogleApiProvider;
+import com.appmovil.myappuberclone.datos.InfoProvider;
+import com.appmovil.myappuberclone.modelos.Info;
 import com.appmovil.myappuberclone.retrofit.IGoogleAPI;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -27,6 +30,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.SquareCap;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
@@ -55,14 +61,15 @@ public class DetalleSolicitudActivity extends AppCompatActivity implements OnMap
     private String mExtraDestination;
 
     private GoogleApiProvider googleApiProvider;
+    private InfoProvider mInfoProvider;
 
     private List<LatLng> mPolyLineList;
     private PolylineOptions mpolylineOptions;
 
     TextView txtorigen;
     TextView txtDestino;
-    TextView txtTiempo;
-    TextView txtDistancia;
+   private TextView txtTiempo;
+   private   TextView txtPrecio;
     Button btnSolicitarAhora;
     String origen;
     String destino;
@@ -83,10 +90,11 @@ public class DetalleSolicitudActivity extends AppCompatActivity implements OnMap
         origingLatLng=new LatLng(extraOriginLat,extraOriginLgn);
         destinationLatLng=new LatLng(extraDestinationLat,extraDestinationLgn);
         googleApiProvider=new GoogleApiProvider(DetalleSolicitudActivity.this);
+        mInfoProvider = new InfoProvider();
         txtorigen=(TextView)findViewById(R.id.txtViewOrigin);
         txtDestino=(TextView)findViewById(R.id.txtViewDestino);
         txtTiempo=(TextView)findViewById(R.id.txtViewTime);
-        txtDistancia=(TextView)findViewById(R.id.txtViewDistancia);
+        txtPrecio=(TextView)findViewById(R.id.txtprecio);
         btnSolicitarAhora=(Button)findViewById(R.id.btnSolicitarAhora);
         txtorigen.setText(origen);
         txtDestino.setText(destino);
@@ -147,10 +155,16 @@ public class DetalleSolicitudActivity extends AppCompatActivity implements OnMap
                     JSONObject duration=leg.getJSONObject("duration");
                     String textdistance=distance.getString("text");
                     String textduration=duration.getString("text");
-                    txtDistancia.setText(textdistance);
-                    txtTiempo.setText(textduration);
+                    txtTiempo.setText(textduration + "   " + textdistance);
+                   // txtPrecio.setText(textdistance);
 
+                    String [] distanciaAndkm=textdistance.split(" ");
+                    double distanceValue= Double.parseDouble(distanciaAndkm[0]);
 
+                    String [] durationAndMins=textduration.split(" ");
+                    double durationValue= Double.parseDouble(durationAndMins[0]);
+
+                    CalcularPrecio(distanceValue, durationValue);
 
                 }catch (Exception e){
                     Log.d("Error","Error encontrado"+e.getMessage());
@@ -162,7 +176,33 @@ public class DetalleSolicitudActivity extends AppCompatActivity implements OnMap
 
             }
         });
+
     }
+
+    private void CalcularPrecio(final double distanceValue, final double durationValue) {
+
+        mInfoProvider.getInfo().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    Info info = snapshot.getValue(Info.class);
+                    double totalDistance=distanceValue * info.getKm();
+                    double totalduration=durationValue * info.getMin();
+                    double total = totalDistance + totalduration;
+                    double mintotal = total - 0.5;
+                    double maxtotal = total + 0.5;
+                    txtPrecio.setText(mintotal + " - " + maxtotal + " $ ");
+                   // txtPrecio.setText(total + "$");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;

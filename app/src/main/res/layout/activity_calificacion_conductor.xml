@@ -86,6 +86,7 @@
             android:textSize="17sp"
             android:layout_marginTop="5dp"/>
 
+
         <RatingBar
             android:id="@+id/ratingbarCalification"
             android:layout_width="wrap_content"
