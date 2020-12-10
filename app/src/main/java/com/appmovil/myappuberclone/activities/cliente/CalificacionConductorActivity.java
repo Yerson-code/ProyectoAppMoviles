@@ -27,6 +27,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Date;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class CalificacionConductorActivity extends AppCompatActivity {
     private LottieAnimationView mAnimation;
     private TextView mTextViewOrigin;
@@ -120,20 +122,18 @@ public class CalificacionConductorActivity extends AppCompatActivity {
                         mHistoryBookingProvider.updateCalificactionDriver(mHistoryBooking.getIdHistoryBooking(), mCalification).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(CalificacionConductorActivity.this, "La calificacion se guardo correctamente", Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(CalificacionConductorActivity.this, MapClienteActivity.class);
-                                startActivity(intent);
-                                finish();
+                                mensajeExito("Calificacion realizada");
+                               
+
                             }
                         });
                     } else {
                         mHistoryBookingProvider.create(mHistoryBooking).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(CalificacionConductorActivity.this, "La calificacion se guardo correctamente", Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(CalificacionConductorActivity.this, MapClienteActivity.class);
-                                startActivity(intent);
-                                finish();
+                               mensajeExito("Calificacion realizada");
+
+
                             }
                         });
                     }
@@ -147,7 +147,30 @@ public class CalificacionConductorActivity extends AppCompatActivity {
 
 
         } else {
-            Toast.makeText(this, "Debes ingresar la calificacion", Toast.LENGTH_SHORT).show();
+            mensajeError("Ingrese la calificacion al conductor");
         }
+    }
+    private void mensajeExito(String mensaje) {
+        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText("Exito")
+                .setContentText(mensaje)
+                .setConfirmText("Aceptar")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                        Intent intent = new Intent(CalificacionConductorActivity.this, MapClienteActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                })
+                .show();
+
+    }
+    private void mensajeError(String mensaje) {
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Error")
+                .setContentText(mensaje)
+                .show();
     }
 }

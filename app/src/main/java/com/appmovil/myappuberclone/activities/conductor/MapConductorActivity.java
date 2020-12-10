@@ -59,6 +59,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.lang.annotation.Target;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class MapConductorActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private SupportMapFragment mMapFragment;
@@ -315,7 +317,7 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.action_lagout){
-          logout();
+          mensajeAdvertencia();
         }
         if(item.getItemId() == R.id.action_actualizar){
             Intent intent=new Intent(MapConductorActivity.this,ActualizarPerfilConductorActivity.class);
@@ -336,5 +338,26 @@ public class MapConductorActivity extends AppCompatActivity implements OnMapRead
     }
     void generateToken() {
        mTokenProvider.create(mAuthProvider.obtenerIdConductor());
+    }
+
+    private void mensajeAdvertencia() {
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Cerrar sesion")
+                .setContentText("¿Desea cerrar sesion?")
+                .setConfirmText("Aceptar")
+                .setCancelText("Cancelar")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        logout();
+                    }
+                })
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                    }
+                })
+                .show();
     }
 }

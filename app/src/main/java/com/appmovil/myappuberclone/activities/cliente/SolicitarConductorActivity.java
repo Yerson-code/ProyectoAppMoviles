@@ -36,6 +36,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -140,7 +141,7 @@ public class SolicitarConductorActivity extends AppCompatActivity {
                     // NO ENCONTRO NINGUN CONDUCTOR
                     if (mRadius > 5) {
                         mTextViewLookingFor.setText("NO SE ENCONTRO UN CONDUCTOR");
-                        Toast.makeText(SolicitarConductorActivity.this, "NO SE ENCONTRO UN CONDUCTOR", Toast.LENGTH_SHORT).show();
+                       mensajeError("No se encontro un conductor");
                         return;
                     }
                     else {
@@ -328,7 +329,7 @@ public class SolicitarConductorActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else if (status.equals("cancel")) {
-                        Toast.makeText(SolicitarConductorActivity.this, "El conductor no acepto el viaje", Toast.LENGTH_SHORT).show();
+                       mensajeError("El conductor no acepto el viaje");
                         Intent intent = new Intent(SolicitarConductorActivity.this, MapClienteActivity.class);
                         startActivity(intent);
                         finish();
@@ -351,5 +352,13 @@ public class SolicitarConductorActivity extends AppCompatActivity {
         if (mListener != null) {
             mClientBookingProvider.getStatus(mAuthProvider.obtenerIdConductor()).removeEventListener(mListener);
         }
+
+
+    }
+    private void mensajeError(String mensaje) {
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Error")
+                .setContentText(mensaje)
+                .show();
     }
 }

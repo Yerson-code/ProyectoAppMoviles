@@ -26,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.regex.Pattern;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import dmax.dialog.SpotsDialog;
 
@@ -82,12 +83,11 @@ public class LoginActivity extends AppCompatActivity {
     private void PrincipalLogin() {
         String email = mTxtcorreo.getText().toString();
         String password = mTxtpasword.getText().toString();
-        if (!validarEmail(mTxtcorreo.getText().toString())){
-            mTxtcorreo.setError("Email no válido");
-            return;
-        }
-
-        if (!email.isEmpty() && !password.isEmpty()){
+            if (!email.isEmpty() && !password.isEmpty()){
+            if (!validarEmail(mTxtcorreo.getText().toString())){
+                mensajeError("Email no válido");
+                return;
+            }
             if (password.length() >=6){
                 mdialog.show();
                 //METODO DE FIREBASE PARA ENVIAR EL USUARIO Y LA CLAVE A LA BASE DE DATOS
@@ -109,8 +109,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         }
                         else {
-                            Toast.makeText(LoginActivity.this, "El email y/o el password son incorrectos", Toast.LENGTH_SHORT ).show();
-
+                            mensajeError("Email y/o Clave incorrectos");
                         }
                         mdialog.dismiss();
                     }
@@ -118,13 +117,19 @@ public class LoginActivity extends AppCompatActivity {
 
             }
             else{
-                Toast.makeText(this, "La contraseña debe tener mas de 6 caracteres", Toast.LENGTH_SHORT ).show();
-
+                mensajeError("La contraseña debe tener al menos 6 caracteres");
             }
         }
         else {
-            Toast.makeText(this, "La contraseña y el email son obligatorios", Toast.LENGTH_SHORT ).show();
-
+            mensajeError("Los datos son obligatorios");
         }
+
+
+    }
+    private void mensajeError(String mensaje) {
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Error")
+                .setContentText(mensaje)
+                .show();
     }
 }

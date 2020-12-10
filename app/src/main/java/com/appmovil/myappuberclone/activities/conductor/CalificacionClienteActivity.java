@@ -27,6 +27,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Date;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class CalificacionClienteActivity extends AppCompatActivity {
     private LottieAnimationView mAnimation;
     private TextView mTextViewOrigin;
@@ -123,10 +125,9 @@ public class CalificacionClienteActivity extends AppCompatActivity {
                         mHistoryBookingProvider.updateCalificactionClient(mHistoryBooking.getIdHistoryBooking(), mCalification).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(CalificacionClienteActivity.this, "La calificacion se guardo correctamente", Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(CalificacionClienteActivity.this, MapConductorActivity.class);
-                                startActivity(intent);
-                                finish();
+                                mensajeExito("La calificacion se guardo correctamente");
+
+
                             }
                         });
                     }
@@ -134,10 +135,9 @@ public class CalificacionClienteActivity extends AppCompatActivity {
                         mHistoryBookingProvider.create(mHistoryBooking).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(CalificacionClienteActivity.this, "La calificacion se guardo correctamente", Toast.LENGTH_LONG).show();
-                                Intent intent = new Intent(CalificacionClienteActivity.this, MapConductorActivity.class);
-                                startActivity(intent);
-                                finish();
+                                mensajeExito("La calificacion se guardo correctamente");
+
+
                             }
                         });
                     }
@@ -152,7 +152,30 @@ public class CalificacionClienteActivity extends AppCompatActivity {
 
         }
         else {
-            Toast.makeText(this, "Debes ingresar la calificacion", Toast.LENGTH_SHORT).show();
+            mensajeError("Ingresa la calificacion al cliente");
         }
+    }
+    private void mensajeExito(String mensaje) {
+        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText("Exito")
+                .setContentText(mensaje)
+                .setConfirmText("Aceptar")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                        Intent intent = new Intent(CalificacionClienteActivity.this, MapConductorActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                })
+                .show();
+
+    }
+    private void mensajeError(String mensaje) {
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Error")
+                .setContentText(mensaje)
+                .show();
     }
 }

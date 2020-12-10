@@ -34,6 +34,7 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ActualizarPerfilClienteActivity extends AppCompatActivity {
@@ -148,7 +149,7 @@ public class ActualizarPerfilClienteActivity extends AppCompatActivity {
             guardarImagen();
         }
         else {
-            Toast.makeText(this, "Ingresa la imagen y el nombre", Toast.LENGTH_SHORT).show();
+           mensajeError("Ingrese nombre e imagen");
         }
     }
     private void guardarImagen() {
@@ -169,19 +170,39 @@ public class ActualizarPerfilClienteActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     mProgressDialog.dismiss();
-                                    Toast.makeText(ActualizarPerfilClienteActivity.this, "Su informacion se actualizo correctamente", Toast.LENGTH_SHORT).show();
+                                   mensajeExito("Su informacion se actualizo correctamente");
                                 }
                             });
                         }
                     });
                 }
                 else {
-                    Toast.makeText(ActualizarPerfilClienteActivity.this, "Hubo un error al subir la imagen", Toast.LENGTH_SHORT).show();
+                   mensajeError("Error al subir la imagen");
                 }
             }
         });
 
 
 
+    }
+    private void mensajeExito(String mensaje) {
+        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText("Exito")
+                .setContentText(mensaje)
+                .setConfirmText("Aceptar")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                        finish();
+                    }
+                })
+                .show();
+            }
+    private void mensajeError(String mensaje) {
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Error")
+                .setContentText(mensaje)
+                .show();
     }
 }

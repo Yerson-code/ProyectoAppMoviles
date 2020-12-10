@@ -71,6 +71,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -177,7 +178,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
                     startBooking();
                 }
                 else {
-                    Toast.makeText(MapDriverBookingActivity.this, "Debes estar mas cerca a la posicion de recogida", Toast.LENGTH_SHORT).show();
+                   mensajeError("Debes estar mas cerca a la posicion de recogida");
                 }
             }
         });
@@ -361,8 +362,8 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
                     double originLng= Double.parseDouble(dataSnapshot.child("originLng").getValue().toString());
                     mOriginLatLng = new LatLng(originLat, originLng);
                     mDestinationLatLng = new LatLng(destinatioLat, destinatioLng);
-                    mTextViewOriginClientBooking.setText("recoger en: " + origin);
-                    mTextViewDestinationClientBooking.setText("destino: " + destination);
+                    mTextViewOriginClientBooking.setText("Recoger en: " + origin);
+                    mTextViewDestinationClientBooking.setText("Destino: " + destination);
                    mMap.addMarker(new MarkerOptions().position(mOriginLatLng).title("Recoger aqui").icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_map_red)));
                     drawRoute(mOriginLatLng);
                 }
@@ -448,7 +449,7 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
                     if (distance <= 200) {
                         //mButtonStartBooking.setEnabled(true);
                         mIsCloseToClient = true;
-                        Toast.makeText(this, "Estas cerca a la posicion de recogida", Toast.LENGTH_SHORT).show();
+                        alertaSimple();
                     }
                 }
            }
@@ -608,5 +609,16 @@ public class MapDriverBookingActivity extends AppCompatActivity implements OnMap
                 ActivityCompat.requestPermissions(MapDriverBookingActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
             }
         }
+    }
+    void alertaSimple(){
+        new SweetAlertDialog(this)
+                .setTitleText("Ya estas cerca al lugar de recogida")
+                .show();
+    }
+    private void mensajeError(String mensaje) {
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Error")
+                .setContentText(mensaje)
+                .show();
     }
 }

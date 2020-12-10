@@ -25,7 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+
 
 import com.appmovil.myappuberclone.R;
 import com.appmovil.myappuberclone.activities.MainActivity;
@@ -63,6 +63,8 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class MapClienteActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
@@ -175,7 +177,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
 
             startActivity(intent);
         }else{
-            Toast.makeText(this, "Seleccione origen y destino", Toast.LENGTH_SHORT).show();
+           mensajeError("Seleccione origen y destino");
         }
     }
 
@@ -451,7 +453,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.action_lagout){
-            logout();
+            mensajeAdvertencia();
         }
         if(item.getItemId() == R.id.action_actualizarPerfil){
             Intent intent=new Intent(MapClienteActivity.this,ActualizarPerfilClienteActivity.class);
@@ -472,5 +474,31 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     void generateToken() {
         mTokenProvider.create(mAuthProvider.obtenerIdConductor());
     }
+    private void mensajeError(String mensaje) {
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Error")
+                .setContentText(mensaje)
+                .show();
+    }
 
+    private void mensajeAdvertencia() {
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Cerrar sesion")
+                .setContentText("¿Desea cerrar sesion?")
+                .setConfirmText("Aceptar")
+                .setCancelText("Cancelar")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        logout();
+                    }
+                })
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                    }
+                })
+                .show();
+    }
 }
